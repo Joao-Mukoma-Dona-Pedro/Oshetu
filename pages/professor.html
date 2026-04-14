@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Professor - Okwetu</title>
+    
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS específico do professor -->
+    <link rel="stylesheet" href="css/professor.css">
+</head>
+<body id="professor-body">
+
+    <header>
+        <h1>Okwetu - Professor</h1>
+        <div id="welcome"></div>
+        <button onclick="logout()">Sair</button>
+    </header>
+
+    <main>
+        <section id="aulas">
+            <h2>Minhas Aulas</h2>
+            <div id="listaAulas" class="cards-container">
+                <!-- Cards de aulas serão inseridos via JS -->
+            </div>
+        </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/professor.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastramento</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body class="auth-page">
+
+    <div class="container">
+        <h1>Criar Conta</h1>
+
+    <form id="formCadastro">
+    <input type="text" placeholder="Nome completo" required>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Senha" required>
+
+    <!-- Tipo de usuário -->
+    <label for="tipoUsuario">Tipo de Usuário:</label>
+    <select id="tipoUsuario" required>
+        <option value="">Selecione</option>
+        <option value="aluno">Aluno</option>
+        <option value="professor">Professor</option>
+    </select>
+
+    <button type="submit">Cadastrar</button>
+</form>
+
+        <p>Já tens conta? <a href="login.html">Entrar</a></p>
+    </div>
+       
+     <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+/* =========================
+   OKWETU - PROFESSOR UI
+   ========================= */
+
+/* Corpo da página */
+#professor-body {
+    background: linear-gradient(135deg, #eef2f7, #dfe9f3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+/* Seções */
+section {
+    margin: 20px;
+}
+
+/* Estatísticas */
+#estatisticas {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Lista de aulas */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 10px;
+}
+
+/* Card de aula */
+.card-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    flex: 1 1 260px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    position: relative;
+    transition: 0.2s ease;
+}
+
+/* Efeito hover */
+.card-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+/* Título */
+.card-item h3 {
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+/* Texto */
+.card-item p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Botão editar */
+.btnEditar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #3498db;
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.btnEditar:hover {
+    background: #2980b9;
+}
+
+/* Botão adicionar aula */
+#btnNovaAula {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background: #27ae60;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#btnNovaAula:hover {
+    background: #219150;
+}
+
+/* Formulários */
+.form-aula,
+.form-editar-aula {
+    background: #ffffff;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Inputs */
+.form-aula input,
+.form-editar-aula input,
+textarea {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+
+/* Botões */
+.form-aula button,
+.form-editar-aula button {
+    width: fit-content;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Botões específicos */
+#btnSalvarAula,
+#btnSalvarEdit {
+    background: #2ecc71;
+    color: white;
+}
+
+#btnCancelarAula,
+#btnCancelarEdit {
+    background: #bdc3c7;
+}
+
+#btnRemoverAula {
+    background: #e74c3c;
+    color: white;
+}

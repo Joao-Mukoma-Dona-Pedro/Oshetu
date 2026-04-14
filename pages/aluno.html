@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Aluno - Okwetu</title>
+    
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS específico do aluno -->
+    <link rel="stylesheet" href="css/aluno.css">
+</head>
+<body id="aluno-body">
+
+    <header>
+        <h1>Okwetu - Aluno</h1>
+        <div id="welcome"></div>
+        <button onclick="logout()">Sair</button>
+    </header>
+
+    <main>
+        <section id="disciplinas">
+            <h2>Minhas Disciplinas</h2>
+
+             <!-- 🔍 Barra de pesquisa -->
+            <input 
+             type="text" 
+             id="pesquisaDisciplina" 
+             placeholder="Pesquisar disciplina ou professor..."
+            >
+            <div id="listaDisciplinas" class="cards-container">
+                <!-- Cards de disciplinas serão inseridos via JS -->
+            </div>
+        </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/aluno.js"></script>
+</body>
+</html>

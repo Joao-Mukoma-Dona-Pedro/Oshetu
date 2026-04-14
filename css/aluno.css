@@ -1,0 +1,134 @@
+/* =========================
+   OKWETU - ALUNO UI
+   ========================= */
+
+#aluno-body {
+    background: linear-gradient(135deg, #f4f6f8, #e8eef5);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Container */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+/* Card disciplina */
+.disciplina-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    flex: 1 1 250px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: 0.2s;
+}
+
+.disciplina-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Nome professor */
+.professor-nome {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* Botão */
+.btn-ver-aulas {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: none;
+    background: #4a90e2;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-ver-aulas:hover {
+    background: #357abd;
+}
+
+/* Aulas container */
+.aulas-container {
+    margin-top: 10px;
+    display: none;
+}
+
+.aulas-container.ativo {
+    display: block;
+}
+
+/* Card aula */
+.card-aula {
+    background: #f9fbfd;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    border-left: 4px solid #4a90e2;
+}
+
+/* Título aula */
+.card-aula h4 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+/* Data */
+.card-aula .data {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* PDFs */
+.pdfs {
+    margin-top: 5px;
+}
+
+.pdf-link {
+    display: inline-block;
+    margin-right: 5px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: #2c7be5;
+}
+
+.pdf-link:hover {
+    text-decoration: underline;
+}
+
+/* Vídeo */
+.video video {
+    margin-top: 8px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Barra de pesquisa */
+#pesquisaDisciplina {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin: 10px 0 15px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+#pesquisaDisciplina:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74,144,226,0.3);
+}

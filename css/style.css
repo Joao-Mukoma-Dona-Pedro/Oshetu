@@ -1,0 +1,297 @@
+@charset "utf-8"
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f9f8;
+}
+
+    /* Navbar */
+    header {
+      background-color: #0d47a1;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      margin: 0;
+    }
+
+    header button {
+      margin-left: 10px;
+      padding: 8px 15px;
+      border: none;
+      cursor: pointer;
+      background: white;
+      color: #0d47a1;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    /* Hero */
+    .hero {
+    background: linear-gradient(135deg, #0d47a1, #42a5f5);
+    padding: 60px 20px;
+}
+
+/* Container principal */
+.hero-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: auto;
+    gap: 40px;
+}
+
+/* Lado esquerdo */
+.hero-left {
+    background: #d9e4ec;
+    padding: 30px;
+    border-radius: 10px;
+    width: 40%;
+}
+
+.hero-left h1 {
+    font-size: 32px;
+}
+
+.hero-left button {
+    margin-top: 20px;
+    background: #d9e4ec;
+    padding: 30px;
+    border-radius: 10px;
+    width: 40%;
+    min-width: 280px;
+}
+
+/* Lado direito */
+.hero-right {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+    /* Features */
+    .features {
+      display: flex;
+      justify-content: space-around;
+      padding: 40px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      width: 300px;
+      background: white;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.603);
+      text-align: center;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    .modal button {
+      width: 100%;
+      padding: 10px;
+      background: #0d47a1;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #0d47a1;
+      color: white;
+    }
+
+    .dashboard-container {
+    padding: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    background: #0d47a1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.card-item {
+    background: white;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    width: 250px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* ================= LOGIN / CADASTRO ================= */
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+
+/* Título */
+.container h1 {
+    margin-bottom: 20px;
+    color: #0d47a1;
+}
+
+/* Inputs */
+.container input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.container input:focus {
+    border-color: #0d47a1;
+}
+
+/* Botão */
+.container button {
+    width: 100%;
+    padding: 12px;
+    background: #0d47a1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.container button:hover {
+    background: #1565c0;
+}
+
+/* Link */
+.container p {
+    margin-top: 15px;
+}
+
+.container a {
+    color: #0d47a1;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* CSS-login */
+.auth-page {
+    background: linear-gradient(135deg, #0d47a1, #42a5f5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Prefixo #candidatura para isolar estilos desta página */
+#candidatura-body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+#candidatura-body header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+#candidatura-body .container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+#candidatura-body .card-candidatura {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Hover animado para destaque */
+#candidatura-body .card-candidatura:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+#candidatura-body .card-candidatura img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+#candidatura-body .card-candidatura div {
+    flex: 1;
+}
+
+#candidatura-body .card-candidatura h3 {
+    margin: 0 0 5px 0;
+}
+
+#candidatura-body .card-candidatura p {
+    margin: 2px 0;
+}
+  
+ 
+    
