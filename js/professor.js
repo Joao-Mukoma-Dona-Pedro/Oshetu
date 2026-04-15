@@ -59,13 +59,29 @@ document.addEventListener("DOMContentLoaded", () => {
             perfil.aulas.forEach((a, index) => {
                 const card = document.createElement("div");
                 card.className = "card-item";
-                card.innerHTML = `
-                    <h3>${a.topico}</h3>
-                    <p>Data: ${a.data}</p>
-                    <p>PDFs: ${a.pdfs.length ? a.pdfs.join(", ") : "Nenhum"}</p>
-                    <p>Vídeo: ${a.video || "Nenhum"}</p>
-                    <button class="editar-aula" data-index="${index}">Editar</button>
-                `;
+
+                const titulo = document.createElement("h3");
+                titulo.textContent = a.topico;
+
+                const data = document.createElement("p");
+                data.textContent = `Data: ${a.data}`;
+
+                const pdfs = document.createElement("p");
+                pdfs.textContent = `PDFs: ${a.pdfs.length ? a.pdfs.join(", ") : "Nenhum"}`;
+
+                const video = document.createElement("p");
+                video.textContent = `Vídeo: ${a.video || "Nenhum"}`;
+
+                const btnEditar = document.createElement("button");
+                btnEditar.className = "editar-aula";
+                btnEditar.dataset.index = index;
+                btnEditar.textContent = "Editar";
+
+                card.appendChild(titulo);
+                card.appendChild(data);
+                card.appendChild(pdfs);
+                card.appendChild(video);
+                card.appendChild(btnEditar);
                 container.appendChild(card);
             });
         }
