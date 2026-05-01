@@ -24,6 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
             div.innerHTML += '<P>${C.título}</p>';
         });
         }
+    localStoragr.setItem("classe", classe);
+    const classeGuardada = 
+        localStorage.getItem("classe");
+    if ( lasseGuardada) {
+        mudarclasse(classeGuardada);
+    }
             
 
     const container = document.getElementById("listaDisciplinas");
