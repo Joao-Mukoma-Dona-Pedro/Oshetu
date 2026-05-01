@@ -1,134 +1,158 @@
-/* =========================
-   OKWETU - ALUNO UI
-   ========================= */
-
-#aluno-body {
-    background: linear-gradient(135deg, #f4f6f8, #e8eef5);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+﻿#aluno-body {
+    background:
+        radial-gradient(circle at top left, rgba(88, 166, 234, 0.18), transparent 24%),
+        linear-gradient(180deg, #f4f8ff 0%, #eef5fb 100%);
 }
 
-/* Header */
-header {
+.student-header {
+    background: linear-gradient(135deg, #1852a4 0%, #2b7cd9 100%);
+}
+
+.student-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 1.2rem;
+    align-items: center;
+}
+
+.disciplina-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.2rem;
+    border-radius: 1.35rem;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(19, 34, 56, 0.08);
+    box-shadow: 0 18px 34px rgba(15, 47, 87, 0.08);
+}
+
+.disciplina-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.disciplina-header h3 {
+    margin: 0;
+    color: #12345d;
+}
+
+.professor-nome {
+    margin: 0.35rem 0 0;
+    color: #5d7390;
+}
+
+.disciplina-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.meta-pill {
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(24, 82, 164, 0.08);
+    color: #1852a4;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.disciplina-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.2rem 2rem;
-    background: linear-gradient(135deg, #4a90e2, #357abd);
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    gap: 0.8rem;
 }
 
-/* Container */
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding: 1rem;
-}
-
-/* Card disciplina */
-.disciplina-card {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    flex: 1 1 250px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    transition: 0.2s;
-}
-
-.disciplina-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Nome professor */
-.professor-nome {
-    font-size: 0.85rem;
-    color: #666;
-}
-
-/* Botão */
 .btn-ver-aulas {
-    margin-top: 10px;
-    padding: 8px 12px;
-    border: none;
-    background: #4a90e2;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
+    min-height: 42px;
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1852a4, #2b7cd9);
+    color: #ffffff;
+    font-weight: 700;
 }
 
-.btn-ver-aulas:hover {
-    background: #357abd;
-}
-
-/* Aulas container */
 .aulas-container {
-    margin-top: 10px;
     display: none;
+    gap: 0.9rem;
 }
 
 .aulas-container.ativo {
-    display: block;
+    display: grid;
 }
 
-/* Card aula */
 .card-aula {
-    background: #f9fbfd;
-    padding: 10px;
-    border-radius: 10px;
-    margin-top: 10px;
-    border-left: 4px solid #4a90e2;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: #f6faff;
+    border: 1px solid rgba(24, 82, 164, 0.1);
 }
 
-/* Título aula */
 .card-aula h4 {
-    margin: 0;
-    color: #2c3e50;
+    margin: 0 0 0.4rem;
+    color: #12345d;
 }
 
-/* Data */
-.card-aula .data {
-    font-size: 0.8rem;
-    color: #888;
+.aula-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+    align-items: center;
+    margin-bottom: 0.4rem;
 }
 
-/* PDFs */
-.pdfs {
-    margin-top: 5px;
-}
-
-.pdf-link {
-    display: inline-block;
-    margin-right: 5px;
-    font-size: 0.85rem;
-    text-decoration: none;
-    color: #2c7be5;
-}
-
-.pdf-link:hover {
-    text-decoration: underline;
-}
-
-/* Vídeo */
-.video video {
-    margin-top: 8px;
-    width: 100%;
-    border-radius: 8px;
-}
-
-/* Barra de pesquisa */
-#pesquisaDisciplina {
-    width: 100%;
-    max-width: 400px;
-    padding: 10px;
-    margin: 10px 0 15px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+.aula-data {
+    color: #5d7390;
     font-size: 0.9rem;
-    outline: none;
+    font-weight: 600;
 }
 
-#pesquisaDisciplina:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 5px rgba(74,144,226,0.3);
+.aula-descricao {
+    margin: 0.5rem 0 0.8rem;
+    color: #4b627e;
+    line-height: 1.65;
+}
+
+.resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.resource-pill,
+.resource-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(24, 82, 164, 0.08);
+    color: #1852a4;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.video-preview {
+    margin-top: 0.8rem;
+    width: 100%;
+    border-radius: 0.9rem;
+}
+
+.disciplina-empty {
+    color: #6c7f96;
+    font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+    .student-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .disciplina-header,
+    .disciplina-actions,
+    .aula-topline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

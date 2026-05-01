@@ -1,97 +1,222 @@
-// =========================
-// CADASTRO
-// =========================
-const formCadastro = document.getElementById("formCadastro");
+﻿const FLASH_KEY = "oshetu_flash_message";
 
-if (formCadastro) {
-    formCadastro.addEventListener("submit", function(e) {
-        e.preventDefault();
+function showStatus(element, text, type = "info") {
+    if (!element) {
+        return;
+    }
 
-        const nome = document.querySelector("input[type='text']").value.trim();
-        const email = document.querySelector("input[type='email']").value.trim();
-        const senha = document.querySelector("input[type='password']").value;
-        const tipo = document.getElementById("tipoUsuario").value;
+    element.textContent = text;
+    element.className = `status-message is-visible is-${type}`;
+}
 
-        if (!nome || !email || !senha) {
-            alert("Preencha todos os campos!");
-            return;
-        }
+function clearStatus(element) {
+    if (!element) {
+        return;
+    }
 
-        if(!tipo){
-            alert("Selecione o tipo de usuário.");
-            return;
-        }
+    element.textContent = "";
+    element.className = "status-message";
+}
 
-        // Recupera lista de usuários do localStorage
-        let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+function setFlashMessage(text, type = "info") {
+    sessionStorage.setItem(FLASH_KEY, JSON.stringify({ text, type }));
+}
 
-        // Verifica se já existe usuário com mesmo email
-        const existe = usuarios.find(u => u.email === email);
-        if(existe){
-            alert("Usuário com este email já existe!");
-            return;
-        }
+function consumeFlashMessage(element) {
+    const raw = sessionStorage.getItem(FLASH_KEY);
+    if (!raw) {
+        return;
+    }
 
-        const novoUsuario = { nome, email, senha, tipo };
+    sessionStorage.removeItem(FLASH_KEY);
 
-        // Adiciona à lista
-        usuarios.push(novoUsuario);
+    try {
+        const message = JSON.parse(raw);
+        showStatus(element, message.text, message.type);
+    } catch (error) {
+        showStatus(element, raw, "info");
+    }
+}
 
-        // Salva a lista de usuários e o usuário logado
-        localStorage.setItem("usuarios", JSON.stringify(usuarios));
-        localStorage.setItem("usuario", JSON.stringify(novoUsuario));
+function normaliseEmail(value) {
+    return value.trim().toLowerCase();
+}
 
-        alert("Conta criada com sucesso!");
+function emailIsValid(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-        // Redireciona conforme tipo
-        if(tipo === "aluno"){
-            window.location.href = "aluno.html";
-        } else {
-            window.location.href = "professor.html";
-        }
+function getUsuarios() {
+    return JSON.parse(localStorage.getItem("usuarios")) || [];
+}
+
+function saveUsuarios(usuarios) {
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+}
+
+function activateRole(role) {
+    const roleInput = document.getElementById("tipoUsuario");
+    const options = document.querySelectorAll(".role-option");
+
+    if (!roleInput || options.length === 0) {
+        return;
+    }
+
+    roleInput.value = role;
+    options.forEach((option) => {
+        const isActive = option.dataset.role === role;
+        option.classList.toggle("is-active", isActive);
+        option.setAttribute("aria-pressed", String(isActive));
     });
 }
 
-// =========================
-// LOGIN
-// =========================
-const formLogin = document.getElementById("formLogin");
+function updatePasswordStrength(input) {
+    const bar = document.getElementById("passwordStrengthBar");
+    const text = document.getElementById("passwordStrengthText");
+    if (!bar || !text || !input) {
+        return;
+    }
 
-if (formLogin) {
-    formLogin.addEventListener("submit", function(e) {
-        e.preventDefault();
+    const value = input.value;
+    let strength = 0;
 
-        const email = document.querySelector("input[type='email']").value.trim();
-        const senha = document.querySelector("input[type='password']").value;
+    if (value.length >= 6) strength += 1;
+    if (/[A-Z]/.test(value)) strength += 1;
+    if (/[0-9]/.test(value)) strength += 1;
+    if (/[^A-Za-z0-9]/.test(value)) strength += 1;
 
-        // Recupera todos os usuários
-        const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    const levels = [
+        { width: "0%", color: "#d4861a", label: "Usa pelo menos 6 caracteres." },
+        { width: "35%", color: "#d4861a", label: "Senha basica. Podes reforcar mais." },
+        { width: "60%", color: "#cc9c2d", label: "Senha aceitavel. Adiciona mais variedade se quiseres." },
+        { width: "80%", color: "#2d8abb", label: "Senha forte." },
+        { width: "100%", color: "#1f8f5f", label: "Senha muito forte." }
+    ];
 
-        // Procura usuário correspondente
-        const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+    const current = levels[strength];
+    bar.style.width = current.width;
+    bar.style.backgroundColor = current.color;
+    text.textContent = current.label;
+}
 
-        if (usuario) {
-            // Salva o usuário logado
-            localStorage.setItem("usuario", JSON.stringify(usuario));
-
-            alert("Login bem-sucedido!");
-
-            // Redireciona conforme tipo
-            if(usuario.tipo === "aluno"){
-                window.location.href = "aluno.html";
-            } else if(usuario.tipo === "professor"){
-                window.location.href = "professor.html";
+function setupPasswordToggles() {
+    document.querySelectorAll(".toggle-password").forEach((button) => {
+        button.addEventListener("click", () => {
+            const input = document.getElementById(button.dataset.target);
+            if (!input) {
+                return;
             }
-        } else {
-            alert("Email ou senha inválidos!");
-        }
+
+            const showing = input.type === "text";
+            input.type = showing ? "password" : "text";
+            button.textContent = showing ? "Mostrar" : "Ocultar";
+        });
     });
 }
 
-// =========================
-// LOGOUT (opcional)
-// =========================
+document.addEventListener("DOMContentLoaded", () => {
+    setupPasswordToggles();
+
+    const statusElement = document.getElementById("authMessage");
+    consumeFlashMessage(statusElement);
+
+    const passwordInput = document.getElementById("cadastroSenha");
+    if (passwordInput) {
+        passwordInput.addEventListener("input", () => updatePasswordStrength(passwordInput));
+        updatePasswordStrength(passwordInput);
+    }
+
+    document.querySelectorAll(".role-option").forEach((option) => {
+        option.addEventListener("click", () => activateRole(option.dataset.role));
+    });
+
+    const formCadastro = document.getElementById("formCadastro");
+    if (formCadastro) {
+        formCadastro.addEventListener("submit", (event) => {
+            event.preventDefault();
+            clearStatus(statusElement);
+
+            const nome = document.getElementById("cadastroNome").value.trim();
+            const email = normaliseEmail(document.getElementById("cadastroEmail").value);
+            const senha = document.getElementById("cadastroSenha").value;
+            const tipo = document.getElementById("tipoUsuario").value;
+
+            if (!nome || !email || !senha) {
+                showStatus(statusElement, "Preenche todos os campos antes de continuar.", "error");
+                return;
+            }
+
+            if (!emailIsValid(email)) {
+                showStatus(statusElement, "Introduce um email valido para criar a conta.", "error");
+                return;
+            }
+
+            if (senha.length < 6) {
+                showStatus(statusElement, "A senha precisa de pelo menos 6 caracteres.", "error");
+                return;
+            }
+
+            if (!tipo) {
+                showStatus(statusElement, "Escolhe se vais entrar como aluno ou professor.", "error");
+                return;
+            }
+
+            const usuarios = getUsuarios();
+            const existe = usuarios.find((usuario) => usuario.email === email);
+            if (existe) {
+                showStatus(statusElement, "Ja existe um utilizador com este email.", "error");
+                return;
+            }
+
+            const novoUsuario = { nome, email, senha, tipo };
+            usuarios.push(novoUsuario);
+            saveUsuarios(usuarios);
+            localStorage.setItem("usuario", JSON.stringify(novoUsuario));
+            localStorage.setItem("oshetu_last_email", email);
+
+            setFlashMessage("Conta criada com sucesso. Bem-vindo ao Oshetu.", "success");
+            window.location.href = tipo === "aluno" ? "aluno.html" : "professor.html";
+        });
+    }
+
+    const formLogin = document.getElementById("formLogin");
+    if (formLogin) {
+        const rememberedEmail = localStorage.getItem("oshetu_last_email");
+        const loginEmail = document.getElementById("loginEmail");
+        if (rememberedEmail && loginEmail) {
+            loginEmail.value = rememberedEmail;
+        }
+
+        formLogin.addEventListener("submit", (event) => {
+            event.preventDefault();
+            clearStatus(statusElement);
+
+            const email = normaliseEmail(document.getElementById("loginEmail").value);
+            const senha = document.getElementById("loginSenha").value;
+
+            if (!emailIsValid(email) || !senha) {
+                showStatus(statusElement, "Preenche email e senha corretamente para entrar.", "error");
+                return;
+            }
+
+            const usuarios = getUsuarios();
+            const usuario = usuarios.find((item) => item.email === email && item.senha === senha);
+
+            if (!usuario) {
+                showStatus(statusElement, "Email ou senha invalidos. Tenta novamente.", "error");
+                return;
+            }
+
+            localStorage.setItem("usuario", JSON.stringify(usuario));
+            localStorage.setItem("oshetu_last_email", email);
+            setFlashMessage("Entrada confirmada. Sessao iniciada com sucesso.", "success");
+            window.location.href = usuario.tipo === "aluno" ? "aluno.html" : "professor.html";
+        });
+    }
+});
+
 function logout() {
     localStorage.removeItem("usuario");
+    setFlashMessage("Sessao terminada com sucesso.", "info");
     window.location.href = "login.html";
 }

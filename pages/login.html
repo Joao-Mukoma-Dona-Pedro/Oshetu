@@ -1,28 +1,44 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Okwetu</title>
-
-    <link rel="stylesheet" href="css/style.css">
+    <title>Entrar - Oshetu</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="auth-page">
+    <main class="auth-shell">
+        <section class="auth-card">
+            <a href="index.html" class="auth-brand">Oshetu</a>
+            <span class="eyebrow">Acesso a plataforma</span>
+            <h1>Entra na tua area com mais clareza.</h1>
+            <p class="auth-copy">
+                Continua o teu acompanhamento academico com uma experiencia mais simples e responsiva.
+            </p>
 
-    <div class="container">
-        <h1>Entrar</h1>
+            <div id="authMessage" class="status-message" aria-live="polite"></div>
 
-        <form id="formLogin">
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Senha" required>
+            <form id="formLogin" class="auth-form">
+                <label class="field" for="loginEmail">
+                    <span>Email</span>
+                    <input id="loginEmail" type="email" placeholder="teuemail@escola.com" autocomplete="email" required>
+                </label>
 
-            <button type="submit">Entrar</button>
-        </form>
+                <label class="field" for="loginSenha">
+                    <span>Senha</span>
+                    <div class="input-shell">
+                        <input id="loginSenha" type="password" placeholder="Introduz a tua senha" autocomplete="current-password" required>
+                        <button class="toggle-password" type="button" data-target="loginSenha">Mostrar</button>
+                    </div>
+                </label>
 
-        <p>Não tens conta? <a href="cadastro.html">Criar conta</a></p>
-    </div>
+                <button type="submit" class="primary-button auth-submit">Entrar</button>
+            </form>
 
-    <script src="js/auth.js"></script>
+            <p class="auth-footer-text">Nao tens conta? <a href="cadastro.html">Criar conta</a></p>
+        </section>
+    </main>
 
+    <script src="../js/auth.js"></script>
 </body>
 </html>

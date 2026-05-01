@@ -1,37 +1,68 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastramento</title>
-    
-    <link rel="stylesheet" href="css/style.css">
-
+    <title>Criar Conta - Oshetu</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="auth-page">
+    <main class="auth-shell">
+        <section class="auth-card">
+            <a href="index.html" class="auth-brand">Oshetu</a>
+            <span class="eyebrow">Criacao de conta</span>
+            <h1>Comeca com o perfil certo para o teu fluxo.</h1>
+            <p class="auth-copy">
+                Define os teus dados, escolhe o tipo de utilizador e entra numa experiencia mais interativa.
+            </p>
 
-    <div class="container">
-        <h1>Criar Conta</h1>
+            <div id="authMessage" class="status-message" aria-live="polite"></div>
 
-    <form id="formCadastro">
-    <input type="text" placeholder="Nome completo" required>
-    <input type="email" placeholder="Email" required>
-    <input type="password" placeholder="Senha" required>
+            <form id="formCadastro" class="auth-form">
+                <label class="field" for="cadastroNome">
+                    <span>Nome completo</span>
+                    <input id="cadastroNome" type="text" placeholder="Ex.: Maria Bongo" autocomplete="name" required>
+                </label>
 
-    <!-- Tipo de usuário -->
-    <label for="tipoUsuario">Tipo de Usuário:</label>
-    <select id="tipoUsuario" required>
-        <option value="">Selecione</option>
-        <option value="aluno">Aluno</option>
-        <option value="professor">Professor</option>
-    </select>
+                <label class="field" for="cadastroEmail">
+                    <span>Email</span>
+                    <input id="cadastroEmail" type="email" placeholder="teuemail@escola.com" autocomplete="email" required>
+                </label>
 
-    <button type="submit">Cadastrar</button>
-</form>
+                <label class="field" for="cadastroSenha">
+                    <span>Senha</span>
+                    <div class="input-shell">
+                        <input id="cadastroSenha" type="password" placeholder="Cria uma senha segura" autocomplete="new-password" required>
+                        <button class="toggle-password" type="button" data-target="cadastroSenha">Mostrar</button>
+                    </div>
+                    <div class="password-meter" aria-hidden="true">
+                        <span id="passwordStrengthBar"></span>
+                    </div>
+                    <small id="passwordStrengthText" class="helper-text">Usa pelo menos 6 caracteres.</small>
+                </label>
 
-        <p>Já tens conta? <a href="login.html">Entrar</a></p>
-    </div>
-       
-     <script src="js/auth.js"></script>
+                <div class="field">
+                    <span>Tipo de utilizador</span>
+                    <div class="role-grid" id="roleGrid">
+                        <button class="role-option" type="button" data-role="aluno" aria-pressed="false">
+                            <strong>Aluno</strong>
+                            <span>Acede a disciplinas, aulas e recursos.</span>
+                        </button>
+                        <button class="role-option" type="button" data-role="professor" aria-pressed="false">
+                            <strong>Professor</strong>
+                            <span>Organiza perfil, aulas e materiais.</span>
+                        </button>
+                    </div>
+                    <input id="tipoUsuario" type="hidden" required>
+                </div>
+
+                <button type="submit" class="primary-button auth-submit">Criar conta</button>
+            </form>
+
+            <p class="auth-footer-text">Ja tens conta? <a href="login.html">Entrar</a></p>
+        </section>
+    </main>
+
+    <script src="../js/auth.js"></script>
 </body>
 </html>

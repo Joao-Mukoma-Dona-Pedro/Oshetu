@@ -1,78 +1,191 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Okwetu</title>
-
-  <link rel="stylesheet" href="css/style.css">
-
+  <title>Oshetu</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
+<body class="home-page">
+  <header class="site-header">
+    <a href="index.html" class="brand">Oshetu</a>
 
-<body>
+    <nav class="site-nav">
+      <a href="#experiencia">Experiencia</a>
+      <a href="#passos">Como funciona</a>
+      <a href="#faq">FAQ</a>
+    </nav>
 
-  <!-- Navbar -->
-  <header>
-
-    <h2>Okwetu</h2>
-
-    <div>
-      <a href="login.html"><button>Entrar</button></a>
-    <a href="cadastro.html"><button>Criar Conta</button></a>
+    <div class="site-actions">
+      <a href="login.html" class="secondary-button">Entrar</a>
+      <a href="cadastro.html" class="primary-button">Criar conta</a>
     </div>
-    
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-container">
+  <main>
+    <section class="hero-section section-reveal">
+      <div class="hero-copy">
+        <span class="eyebrow">Plataforma escolar digital</span>
+        <h1>Mais interacao entre escola, professores e alunos em um unico lugar.</h1>
+        <p>
+          O Oshetu organiza acompanhamento academico, comunicacao e progresso
+          em uma experiencia simples, visual e pronta para o dia a dia escolar.
+        </p>
 
-        <div class="hero-left">
-            <h1>Educação Inteligente</h1>
-            <p>Monitoramento e avaliação do desempenho escolar em tempo real.</p>
-
-            <a href="cadastro.html">
-                <button>Começar</button>
-            </a>
+        <div class="hero-actions">
+          <a href="cadastro.html" class="primary-button">Comecar agora</a>
+          <a href="login.html" class="ghost-button">Ja tenho conta</a>
         </div>
 
-        <div class="hero-right">
-            <div class="card">
-                <h3>Avaliação Automática</h3>
-                <p>Testes inteligentes após cada tópico.</p>
-            </div>
+        <div class="hero-metrics">
+          <article class="metric-card">
+            <strong class="count-up" data-target="3" data-suffix=" perfis">0</strong>
+            <span>Alunos, professores e gestao na mesma plataforma.</span>
+          </article>
+          <article class="metric-card">
+            <strong class="count-up" data-target="24" data-suffix="h">0</strong>
+            <span>Visibilidade continua do andamento das aulas.</span>
+          </article>
+          <article class="metric-card">
+            <strong class="count-up" data-target="1" data-suffix=" painel">0</strong>
+            <span>Tudo centralizado para agir com mais rapidez.</span>
+          </article>
+        </div>
+      </div>
 
-            <div class="card">
-                <h3>Análise de Desempenho</h3>
-                <p>Identifica dificuldades e melhora o aprendizado.</p>
-            </div>
-
-            <div class="card">
-                <h3>Relatórios em Tempo Real</h3>
-                <p>Dados claros para professores e gestores.</p>
-            </div>
+      <div class="hero-showcase">
+        <div class="showcase-card is-primary">
+          <p class="panel-label">Destaque do dia</p>
+          <h2>A plataforma ajuda a identificar dificuldades cedo.</h2>
+          <p>
+            Professores acompanham progresso, alunos veem materiais e a gestao
+            enxerga o panorama completo com menos esforco.
+          </p>
         </div>
 
-    </div>
-</section>
+        <div class="showcase-grid">
+          <article class="mini-card">
+            <span>01</span>
+            <h3>Avaliacao clara</h3>
+            <p>Topicos, recursos e datas organizados sem ruido.</p>
+          </article>
+          <article class="mini-card">
+            <span>02</span>
+            <h3>Comunicacao fluida</h3>
+            <p>Mais contexto para cada perfil agir no momento certo.</p>
+          </article>
+          <article class="mini-card">
+            <span>03</span>
+            <h3>Decisoes com dados</h3>
+            <p>Uma leitura simples do que precisa de atencao.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-  <!-- Modal Login -->
-  <div class="modal" id="loginModal">
-    <div class="modal-content">
-      <h3>Login</h3>
-      <input type="email" placeholder="Email">
-      <input type="password" placeholder="Senha">
-      <button onclick="login()">Entrar</button>
-    </div>
-  </div>
+    <section id="experiencia" class="persona-section section-reveal">
+      <div class="section-heading">
+        <span class="eyebrow">Experiencia por perfil</span>
+        <h2>O valor da plataforma muda de acordo com quem a usa.</h2>
+      </div>
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2026 Oaketo</p>
+      <div class="persona-layout">
+        <div class="persona-tabs" role="tablist" aria-label="Perfis do Oshetu">
+          <button class="persona-tab is-active" type="button" data-persona="aluno">Aluno</button>
+          <button class="persona-tab" type="button" data-persona="professor">Professor</button>
+          <button class="persona-tab" type="button" data-persona="gestao">Gestao</button>
+        </div>
+
+        <article class="persona-panel" id="personaPanel">
+          <p class="panel-label" id="personaLabel">Aluno</p>
+          <h3 id="personaTitle">Uma jornada mais clara para acompanhar disciplinas e materiais.</h3>
+          <p id="personaText">
+            O estudante encontra aulas, recursos e indicacoes de forma simples,
+            sem perder tempo procurando informacoes espalhadas.
+          </p>
+          <ul id="personaPoints" class="persona-points">
+            <li>Pesquisa rapida por disciplina e professor.</li>
+            <li>Aulas expandidas com materiais e recursos.</li>
+            <li>Leitura visual do proprio percurso de aprendizagem.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="passos" class="steps-section section-reveal">
+      <div class="section-heading">
+        <span class="eyebrow">Como funciona</span>
+        <h2>Tres passos para colocar a escola em movimento.</h2>
+      </div>
+
+      <div class="steps-grid">
+        <article class="step-card">
+          <span>1</span>
+          <h3>Criar a conta</h3>
+          <p>O utilizador entra como aluno ou professor e abre o seu fluxo principal.</p>
+        </article>
+        <article class="step-card">
+          <span>2</span>
+          <h3>Organizar informacoes</h3>
+          <p>Perfis, disciplinas, aulas e recursos ficam ligados ao contexto certo.</p>
+        </article>
+        <article class="step-card">
+          <span>3</span>
+          <h3>Acompanhar resultados</h3>
+          <p>Com interacoes mais claras, fica mais facil agir a tempo.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="faq-section section-reveal">
+      <div class="section-heading">
+        <span class="eyebrow">Perguntas frequentes</span>
+        <h2>Respostas rapidas para a primeira visita.</h2>
+      </div>
+
+      <div class="faq-list">
+        <article class="faq-item">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            O Oshetu serve apenas para professores?
+          </button>
+          <div class="faq-content">
+            <p>Nao. A experiencia foi pensada para alunos, professores e gestao escolar.</p>
+          </div>
+        </article>
+        <article class="faq-item">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            Posso acompanhar recursos e aulas numa unica area?
+          </button>
+          <div class="faq-content">
+            <p>Sim. O objetivo e concentrar informacoes academicas em um fluxo mais simples.</p>
+          </div>
+        </article>
+        <article class="faq-item">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            O que melhora com uma home mais interativa?
+          </button>
+          <div class="faq-content">
+            <p>A plataforma comunica melhor o valor logo na chegada e ajuda o utilizador a entrar no fluxo certo mais rapido.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-section section-reveal">
+      <div class="cta-card">
+        <div>
+          <span class="eyebrow">Pronto para avancar</span>
+          <h2>Entra no Oshetu e comeca a estruturar a experiencia escolar.</h2>
+        </div>
+        <a href="cadastro.html" class="primary-button">Criar conta</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Oshetu. Educacao inteligente com foco em acompanhamento real.</p>
   </footer>
 
-  <script src="js/main.js"></script>
-  
-
+  <script src="../js/main.js"></script>
 </body>
 </html>

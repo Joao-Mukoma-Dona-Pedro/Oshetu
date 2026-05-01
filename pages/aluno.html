@@ -1,40 +1,75 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Aluno - Okwetu</title>
-    
-    <!-- CSS Global -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- CSS específico do aluno -->
-    <link rel="stylesheet" href="css/aluno.css">
+    <title>Area do Aluno - Oshetu</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/aluno.css">
 </head>
 <body id="aluno-body">
+    <header class="dashboard-header student-header">
+        <div>
+            <a href="index.html" class="dashboard-brand">Oshetu</a>
+            <p class="dashboard-subtitle">Painel do aluno</p>
+        </div>
 
-    <header>
-        <h1>Okwetu - Aluno</h1>
-        <div id="welcome"></div>
-        <button onclick="logout()">Sair</button>
+        <div class="topbar-actions">
+            <div id="welcome" class="welcome-chip"></div>
+            <button class="secondary-button" type="button" onclick="logout()">Sair</button>
+        </div>
     </header>
 
-    <main>
-        <section id="disciplinas">
-            <h2>Minhas Disciplinas</h2>
-
-             <!-- 🔍 Barra de pesquisa -->
-            <input 
-             type="text" 
-             id="pesquisaDisciplina" 
-             placeholder="Pesquisar disciplina ou professor..."
-            >
-            <div id="listaDisciplinas" class="cards-container">
-                <!-- Cards de disciplinas serão inseridos via JS -->
+    <main class="dashboard-shell">
+        <section class="dashboard-panel student-overview">
+            <div class="panel-copy">
+                <span class="eyebrow">Visao geral</span>
+                <h1>Encontra as tuas disciplinas e materiais mais rapido.</h1>
+                <p>
+                    Pesquisa, filtra e expande as aulas para perceber o que esta disponivel em cada disciplina.
+                </p>
             </div>
+
+            <div class="metric-grid">
+                <article class="metric-card">
+                    <strong id="disciplinasCount">0</strong>
+                    <span>Disciplinas</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="aulasCount">0</strong>
+                    <span>Aulas</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="videosCount">0</strong>
+                    <span>Recursos com video</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="panel-toolbar">
+                <label class="search-field" for="pesquisaDisciplina">
+                    <span class="sr-only">Pesquisar disciplina</span>
+                    <input type="text" id="pesquisaDisciplina" placeholder="Pesquisar disciplina ou professor...">
+                </label>
+
+                <div id="filtrosAluno" class="chip-group">
+                    <button class="chip is-active" type="button" data-filter="todos">Todos</button>
+                    <button class="chip" type="button" data-filter="video">Com video</button>
+                    <button class="chip" type="button" data-filter="pdf">Com PDFs</button>
+                    <button class="chip" type="button" data-filter="recentes">Mais recentes</button>
+                </div>
+
+                <button id="toggleExpandir" class="ghost-button" type="button">Expandir tudo</button>
+            </div>
+
+            <div id="feedbackAluno" class="status-message" aria-live="polite"></div>
+            <p id="resultadoPesquisa" class="helper-text"></p>
+            <div id="listaDisciplinas" class="cards-container"></div>
         </section>
     </main>
 
-    <script src="js/auth.js"></script>
-    <script src="js/aluno.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/aluno.js"></script>
 </body>
 </html>

@@ -1,33 +1,79 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Professor - Okwetu</title>
-    
-    <!-- CSS Global -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- CSS específico do professor -->
-    <link rel="stylesheet" href="css/professor.css">
+    <title>Area do Professor - Oshetu</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/professor.css">
 </head>
 <body id="professor-body">
+    <header class="dashboard-header teacher-header">
+        <div>
+            <a href="index.html" class="dashboard-brand">Oshetu</a>
+            <p class="dashboard-subtitle">Painel do professor</p>
+        </div>
 
-    <header>
-        <h1>Okwetu - Professor</h1>
-        <div id="welcome"></div>
-        <button onclick="logout()">Sair</button>
+        <div class="topbar-actions">
+            <div id="welcome" class="welcome-chip"></div>
+            <button class="secondary-button" type="button" onclick="logout()">Sair</button>
+        </div>
     </header>
 
-    <main>
-        <section id="aulas">
-            <h2>Minhas Aulas</h2>
-            <div id="listaAulas" class="cards-container">
-                <!-- Cards de aulas serão inseridos via JS -->
+    <main class="dashboard-shell">
+        <section class="dashboard-panel teacher-overview">
+            <div class="panel-copy">
+                <span class="eyebrow">Planeamento docente</span>
+                <h1>Organiza o perfil, publica aulas e acompanha o teu espaco.</h1>
+                <p>
+                    Cria aulas, atualiza recursos e mantem uma visao clara do que ja foi preparado para os alunos.
+                </p>
             </div>
+
+            <div class="metric-grid">
+                <article class="metric-card">
+                    <strong id="totalAulas">0</strong>
+                    <span>Total de aulas</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="totalPdfs">0</strong>
+                    <span>Recursos PDF</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="totalVideos">0</strong>
+                    <span>Recursos com video</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="panel-toolbar">
+                <label class="search-field" for="pesquisaAula">
+                    <span class="sr-only">Pesquisar aula</span>
+                    <input type="text" id="pesquisaAula" placeholder="Pesquisar por topico ou data...">
+                </label>
+
+                <div id="filtrosProfessor" class="chip-group">
+                    <button class="chip is-active" type="button" data-filter="todos">Todas</button>
+                    <button class="chip" type="button" data-filter="video">Com video</button>
+                    <button class="chip" type="button" data-filter="pdf">Com PDFs</button>
+                    <button class="chip" type="button" data-filter="recentes">Mais recentes</button>
+                </div>
+
+                <div class="toolbar-actions">
+                    <button id="btnEditarPerfil" class="ghost-button" type="button">Editar perfil</button>
+                    <button id="btnNovaAula" class="primary-button" type="button">Adicionar aula</button>
+                </div>
+            </div>
+
+            <div id="feedbackProfessor" class="status-message" aria-live="polite"></div>
+            <div id="perfilArea"></div>
+            <div id="formArea"></div>
+            <div id="listaAulas" class="cards-container"></div>
         </section>
     </main>
 
-    <script src="js/auth.js"></script>
-    <script src="js/professor.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/professor.js"></script>
 </body>
 </html>
