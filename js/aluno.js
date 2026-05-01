@@ -7,6 +7,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const welcome = document.getElementById("welcome");
     if(welcome) welcome.innerText = `Bem-vindo, ${usuario.nome}`;
+    const conteudos = [
+        { título: "Equações", classe: "10"},
+        { título: "Funções", classe: "10"},
+        { título: "Leis de Newton", classe: "11"},
+        { título: "Energia", classe: "11"},
+        { título: "Derivação e integração", classe: "12"}
+        ];
 
     const container = document.getElementById("listaDisciplinas");
     const inputPesquisa = document.getElementById("pesquisaDisciplina");
