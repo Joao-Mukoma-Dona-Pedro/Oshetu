@@ -14,6 +14,17 @@ document.addEventListener("DOMContentLoaded", () => {
         { título: "Energia", classe: "11"},
         { título: "Derivação e integração", classe: "12"}
         ];
+    function mudarclasse(classe) {
+        document.getElementById("título-classe").innerText = "classe "+ "ª";
+        const filtrados = Conteudos.filter(c=> c.classe === classe);
+        const div = 
+            document.getElementById("conteudos");
+        div.innertHTML = "";
+        filtrados.forEach(c => {
+            div.innerHTML += '<P>${C.título}</p>';
+        });
+        }
+            
 
     const container = document.getElementById("listaDisciplinas");
     const inputPesquisa = document.getElementById("pesquisaDisciplina");
