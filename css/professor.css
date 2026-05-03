@@ -129,3 +129,60 @@
         align-items: flex-start;
     }
 }
+.stat-profile-card {
+    margin-bottom: 0;
+}
+
+.teacher-bar {
+    margin-bottom: 0.9rem;
+}
+
+.submission-stack {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.submission-pill {
+    padding: 0.9rem;
+    border-radius: 1rem;
+    background: rgba(29, 143, 89, 0.06);
+    border: 1px solid rgba(29, 143, 89, 0.12);
+}
+
+.submission-pill p,
+.submission-pill span,
+.interaction-card span {
+    margin: 0.25rem 0 0;
+    color: #4b627e;
+    line-height: 1.6;
+}
+
+.interaction-card {
+    display: grid;
+    gap: 0.2rem;
+}
+
+.enhanced-lesson-card,
+.task-receipt-card {
+    height: 100%;
+}
+
+.student-activity-card {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+}
+
+.teacher-overview-grid .profile-card {
+    margin-bottom: 0;
+}
+
+.teacher-chip strong,
+.teacher-chip span {
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .student-activity-card {
+        grid-template-columns: 1fr;
+    }
+}

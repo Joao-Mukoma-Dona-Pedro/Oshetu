@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestao Escolar - Oshetu</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/professor.css">
+    <link rel="stylesheet" href="../css/gestao.css">
+</head>
+<body id="gestao-body">
+    <header class="dashboard-header management-header">
+        <div>
+            <a href="index.html" class="dashboard-brand">Oshetu</a>
+            <p class="dashboard-subtitle">Painel de gestao</p>
+        </div>
+
+        <div class="topbar-actions">
+            <div id="welcome" class="welcome-chip"></div>
+            <button class="secondary-button" type="button" onclick="logout()">Sair</button>
+        </div>
+    </header>
+
+    <main class="dashboard-shell">
+        <section class="dashboard-panel dashboard-hero-card">
+            <div class="profile-hero">
+                <div class="avatar-shell large">
+                    <img id="managementAvatar" alt="Foto de perfil da gestao">
+                </div>
+                <div class="profile-hero-copy">
+                    <span class="eyebrow">Visao institucional</span>
+                    <h1>A gestao monitora alunos, turmas, professores e desempenho geral.</h1>
+                    <p>Aqui fica a leitura completa do progresso da escola, incluindo medias por turma, classes e perfis.</p>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <article class="metric-card">
+                    <strong id="totalAlunos">0</strong>
+                    <span>Alunos</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="totalProfessores">0</strong>
+                    <span>Professores</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="totalClasses">0</strong>
+                    <span>Classes</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="totalTurmas">0</strong>
+                    <span>Turmas</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="tab-strip" id="managementTabs">
+                <button class="tab-button is-active" type="button" data-tab-target="managementOverviewTab">Resumo</button>
+                <button class="tab-button" type="button" data-tab-target="managementStudentsTab">Alunos</button>
+                <button class="tab-button" type="button" data-tab-target="managementTeachersTab">Professores</button>
+                <button class="tab-button" type="button" data-tab-target="managementAnalyticsTab">Graficos</button>
+                <button class="tab-button" type="button" data-tab-target="managementProfileTab">Perfil</button>
+            </div>
+
+            <section id="managementOverviewTab" class="tab-panel is-active">
+                <div class="split-panel">
+                    <div>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Grafico por turma</span>
+                                <h2>Desempenho medio</h2>
+                            </div>
+                        </div>
+                        <div id="graficoTurmas" class="progress-card"></div>
+                    </div>
+
+                    <div>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Top 5 alunos</span>
+                                <h2>Maior progresso</h2>
+                            </div>
+                        </div>
+                        <div id="topAlunosGrafico" class="progress-card"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="managementStudentsTab" class="tab-panel">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Acompanhamento total</span>
+                        <h2>Desempenho de todos os alunos</h2>
+                    </div>
+                </div>
+                <div id="listaAlunosGestao" class="interaction-grid management-grid"></div>
+            </section>
+
+            <section id="managementTeachersTab" class="tab-panel">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Quadro docente</span>
+                        <h2>Professores e atividade</h2>
+                    </div>
+                </div>
+                <div id="listaProfessoresGestao" class="management-teacher-grid"></div>
+            </section>
+
+            <section id="managementAnalyticsTab" class="tab-panel">
+                <div class="analytics-grid">
+                    <div class="progress-card" id="graficoClasses"></div>
+                    <div class="progress-card" id="graficoPerfis"></div>
+                </div>
+            </section>
+
+            <section id="managementProfileTab" class="tab-panel">
+                <div class="profile-editor-shell">
+                    <div class="profile-preview-card">
+                        <div class="avatar-shell xlarge">
+                            <img id="managementAvatarProfile" alt="Foto do perfil da gestao">
+                        </div>
+                        <h3 id="managementProfileName"></h3>
+                        <p id="managementProfileRole"></p>
+                    </div>
+
+                    <form id="managementProfileForm" class="lesson-form">
+                        <h3>Atualizar perfil</h3>
+                        <label class="field" for="managementName">
+                            <span>Nome da area de gestao</span>
+                            <input id="managementName" type="text">
+                        </label>
+                        <label class="field" for="managementAvatarInput">
+                            <span>Foto de perfil</span>
+                            <input id="managementAvatarInput" type="file" accept="image/*">
+                        </label>
+                        <button type="submit" class="primary-button">Guardar perfil</button>
+                    </form>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="../js/school-data.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/gestao.js"></script>
+</body>
+</html>

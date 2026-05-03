@@ -1,4 +1,4 @@
-﻿const FLASH_KEY = "oshetu_flash_message";
+const FLASH_KEY = "oshetu_flash_message";
 
 function showStatus(element, text, type = "info") {
     if (!element) {
@@ -46,14 +46,6 @@ function emailIsValid(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function getUsuarios() {
-    return JSON.parse(localStorage.getItem("usuarios")) || [];
-}
-
-function saveUsuarios(usuarios) {
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
-}
-
 function activateRole(role) {
     const roleInput = document.getElementById("tipoUsuario");
     const options = document.querySelectorAll(".role-option");
@@ -68,6 +60,17 @@ function activateRole(role) {
         option.classList.toggle("is-active", isActive);
         option.setAttribute("aria-pressed", String(isActive));
     });
+
+    const studentField = document.getElementById("studentProfileField");
+    const teacherField = document.getElementById("teacherDisciplineField");
+
+    if (studentField) {
+        studentField.hidden = role !== "aluno";
+    }
+
+    if (teacherField) {
+        teacherField.hidden = role !== "professor";
+    }
 }
 
 function updatePasswordStrength(input) {
@@ -90,7 +93,7 @@ function updatePasswordStrength(input) {
         { width: "35%", color: "#d4861a", label: "Senha basica. Podes reforcar mais." },
         { width: "60%", color: "#cc9c2d", label: "Senha aceitavel. Adiciona mais variedade se quiseres." },
         { width: "80%", color: "#2d8abb", label: "Senha forte." },
-        { width: "100%", color: "#1f8f5f", label: "Senha muito forte." }
+        { width: "100%", color: "#1f8f5f", label: "Senha muito forte." },
     ];
 
     const current = levels[strength];
@@ -132,6 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const formCadastro = document.getElementById("formCadastro");
     if (formCadastro) {
+        activateRole("aluno");
+
         formCadastro.addEventListener("submit", (event) => {
             event.preventDefault();
             clearStatus(statusElement);
@@ -140,8 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const email = normaliseEmail(document.getElementById("cadastroEmail").value);
             const senha = document.getElementById("cadastroSenha").value;
             const tipo = document.getElementById("tipoUsuario").value;
+            const perfil = document.getElementById("perfilAluno")?.value || "";
+            const disciplina = document.getElementById("disciplinaProfessor")?.value.trim() || "";
 
-            if (!nome || !email || !senha) {
+            if (!nome || !email || !senha || !tipo) {
                 showStatus(statusElement, "Preenche todos os campos antes de continuar.", "error");
                 return;
             }
@@ -156,26 +163,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            if (!tipo) {
-                showStatus(statusElement, "Escolhe se vais entrar como aluno ou professor.", "error");
+            if (tipo === "aluno" && !perfil) {
+                showStatus(statusElement, "Seleciona o perfil do aluno para o encaminhamento automatico.", "error");
                 return;
             }
 
-            const usuarios = getUsuarios();
-            const existe = usuarios.find((usuario) => usuario.email === email);
-            if (existe) {
-                showStatus(statusElement, "Ja existe um utilizador com este email.", "error");
+            const result = window.OkwetuData.registerUser({ nome, email, senha, tipo, perfil, disciplina });
+            if (!result.ok) {
+                showStatus(statusElement, result.message, "error");
                 return;
             }
-
-            const novoUsuario = { nome, email, senha, tipo };
-            usuarios.push(novoUsuario);
-            saveUsuarios(usuarios);
-            localStorage.setItem("usuario", JSON.stringify(novoUsuario));
-            localStorage.setItem("oshetu_last_email", email);
 
             setFlashMessage("Conta criada com sucesso. Bem-vindo ao Oshetu.", "success");
-            window.location.href = tipo === "aluno" ? "aluno.html" : "professor.html";
+            window.location.href = window.OkwetuData.routeForRole(result.user.tipo);
         });
     }
 
@@ -199,24 +199,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const usuarios = getUsuarios();
-            const usuario = usuarios.find((item) => item.email === email && item.senha === senha);
-
-            if (!usuario) {
-                showStatus(statusElement, "Email ou senha invalidos. Tenta novamente.", "error");
+            const result = window.OkwetuData.login(email, senha);
+            if (!result.ok) {
+                showStatus(statusElement, result.message, "error");
                 return;
             }
 
-            localStorage.setItem("usuario", JSON.stringify(usuario));
-            localStorage.setItem("oshetu_last_email", email);
             setFlashMessage("Entrada confirmada. Sessao iniciada com sucesso.", "success");
-            window.location.href = usuario.tipo === "aluno" ? "aluno.html" : "professor.html";
+            window.location.href = window.OkwetuData.routeForRole(result.user.tipo);
         });
     }
 });
 
 function logout() {
-    localStorage.removeItem("usuario");
+    window.OkwetuData.logout();
     setFlashMessage("Sessao terminada com sucesso.", "info");
     window.location.href = "login.html";
 }

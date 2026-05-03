@@ -156,3 +156,59 @@
         align-items: flex-start;
     }
 }
+.student-placement-panel {
+    display: grid;
+    gap: 1rem;
+}
+
+.student-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.student-info-card {
+    padding: 1.2rem;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(19, 34, 56, 0.08);
+    box-shadow: 0 18px 34px rgba(15, 47, 87, 0.08);
+}
+
+.student-info-card strong {
+    display: block;
+    margin: 0.7rem 0 0.35rem;
+    color: #12345d;
+    font-size: 1.2rem;
+}
+
+.student-info-card p,
+.enhanced-card h4,
+.task-card h3 {
+    margin: 0;
+}
+
+.enhanced-card {
+    gap: 0.8rem;
+}
+
+.task-card {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.task-card .teacher-chip img,
+.enhanced-card .teacher-chip img {
+    width: 52px;
+    height: 52px;
+}
+
+.task-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+@media (max-width: 900px) {
+    .student-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

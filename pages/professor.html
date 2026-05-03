@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
@@ -21,58 +21,204 @@
     </header>
 
     <main class="dashboard-shell">
-        <section class="dashboard-panel teacher-overview">
-            <div class="panel-copy">
-                <span class="eyebrow">Planeamento docente</span>
-                <h1>Organiza o perfil, publica aulas e acompanha o teu espaco.</h1>
-                <p>
-                    Cria aulas, atualiza recursos e mantem uma visao clara do que ja foi preparado para os alunos.
-                </p>
+        <section class="dashboard-panel dashboard-hero-card">
+            <div class="profile-hero">
+                <div class="avatar-shell large">
+                    <img id="teacherAvatar" alt="Foto de perfil do professor">
+                </div>
+                <div class="profile-hero-copy">
+                    <span class="eyebrow">Planeamento docente</span>
+                    <h1 id="teacherHeroTitle">Agora o professor acompanha aulas, tarefas e interatividade dos alunos.</h1>
+                    <p id="teacherHeroText">Publica conteudos, recebe trabalhos e ve quais alunos assistiram aulas e como cada turma esta a evoluir.</p>
+                </div>
             </div>
 
             <div class="metric-grid">
                 <article class="metric-card">
                     <strong id="totalAulas">0</strong>
-                    <span>Total de aulas</span>
+                    <span>Aulas publicadas</span>
                 </article>
                 <article class="metric-card">
                     <strong id="totalPdfs">0</strong>
-                    <span>Recursos PDF</span>
+                    <span>Tarefas criadas</span>
                 </article>
                 <article class="metric-card">
                     <strong id="totalVideos">0</strong>
-                    <span>Recursos com video</span>
+                    <span>Visualizacoes</span>
                 </article>
             </div>
         </section>
 
         <section class="dashboard-panel">
-            <div class="panel-toolbar">
-                <label class="search-field" for="pesquisaAula">
-                    <span class="sr-only">Pesquisar aula</span>
-                    <input type="text" id="pesquisaAula" placeholder="Pesquisar por topico ou data...">
-                </label>
-
-                <div id="filtrosProfessor" class="chip-group">
-                    <button class="chip is-active" type="button" data-filter="todos">Todas</button>
-                    <button class="chip" type="button" data-filter="video">Com video</button>
-                    <button class="chip" type="button" data-filter="pdf">Com PDFs</button>
-                    <button class="chip" type="button" data-filter="recentes">Mais recentes</button>
-                </div>
-
-                <div class="toolbar-actions">
-                    <button id="btnEditarPerfil" class="ghost-button" type="button">Editar perfil</button>
-                    <button id="btnNovaAula" class="primary-button" type="button">Adicionar aula</button>
-                </div>
+            <div class="tab-strip" id="teacherTabs">
+                <button class="tab-button is-active" type="button" data-tab-target="teacherOverviewTab">Resumo</button>
+                <button class="tab-button" type="button" data-tab-target="teacherPublishTab">Publicar</button>
+                <button class="tab-button" type="button" data-tab-target="teacherLessonsTab">Aulas</button>
+                <button class="tab-button" type="button" data-tab-target="teacherSubmissionsTab">Trabalhos</button>
+                <button class="tab-button" type="button" data-tab-target="teacherProfileTab">Perfil</button>
             </div>
 
             <div id="feedbackProfessor" class="status-message" aria-live="polite"></div>
-            <div id="perfilArea"></div>
-            <div id="formArea"></div>
-            <div id="listaAulas" class="cards-container"></div>
+
+            <section id="teacherOverviewTab" class="tab-panel is-active">
+                <div class="panel-toolbar">
+                    <div class="filter-grid">
+                        <label class="field" for="filterTeacherClass">
+                            <span>Classe</span>
+                            <select id="filterTeacherClass"></select>
+                        </label>
+                        <label class="field" for="filterTeacherTurma">
+                            <span>Turma</span>
+                            <select id="filterTeacherTurma"></select>
+                        </label>
+                    </div>
+                </div>
+                <div id="teacherProfileBoard" class="teacher-overview-grid"></div>
+                <div class="split-panel">
+                    <div>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Interatividade</span>
+                                <h2>Quem viu as aulas</h2>
+                            </div>
+                        </div>
+                        <div id="teacherInteractions" class="interaction-grid"></div>
+                    </div>
+
+                    <div>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Grafico</span>
+                                <h2>Desempenho da turma</h2>
+                            </div>
+                        </div>
+                        <div id="teacherChart" class="progress-card"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="teacherPublishTab" class="tab-panel">
+                <div class="split-panel">
+                    <form id="formNovaAula" class="lesson-form">
+                        <h3>Nova aula</h3>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="topicoAula">
+                                <span>Topico</span>
+                                <input id="topicoAula" type="text" required>
+                            </label>
+                            <label class="field" for="dataAula">
+                                <span>Data</span>
+                                <input id="dataAula" type="date" required>
+                            </label>
+                        </div>
+                        <label class="field" for="descricaoAula">
+                            <span>Resumo da aula</span>
+                            <textarea id="descricaoAula" required></textarea>
+                        </label>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="pdfsAula">
+                                <span>Materiais</span>
+                                <input id="pdfsAula" type="text" placeholder="separados por virgula">
+                            </label>
+                            <label class="field" for="videoAula">
+                                <span>Video</span>
+                                <input id="videoAula" type="text" placeholder="descricao ou link do video">
+                            </label>
+                        </div>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="aulaClasse">
+                                <span>Classe de destino</span>
+                                <select id="aulaClasse"></select>
+                            </label>
+                            <label class="field" for="aulaTurma">
+                                <span>Turma de destino</span>
+                                <select id="aulaTurma"></select>
+                            </label>
+                        </div>
+                        <button type="submit" class="primary-button">Guardar aula</button>
+                    </form>
+
+                    <form id="formNovaTarefa" class="lesson-form">
+                        <h3>Nova tarefa</h3>
+                        <label class="field" for="tituloTarefa">
+                            <span>Titulo</span>
+                            <input id="tituloTarefa" type="text" required>
+                        </label>
+                        <label class="field" for="prazoTarefa">
+                            <span>Prazo</span>
+                            <input id="prazoTarefa" type="date" required>
+                        </label>
+                        <label class="field" for="descricaoTarefa">
+                            <span>Descricao</span>
+                            <textarea id="descricaoTarefa" required></textarea>
+                        </label>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="tarefaClasse">
+                                <span>Classe de destino</span>
+                                <select id="tarefaClasse"></select>
+                            </label>
+                            <label class="field" for="tarefaTurma">
+                                <span>Turma de destino</span>
+                                <select id="tarefaTurma"></select>
+                            </label>
+                        </div>
+                        <button type="submit" class="primary-button">Publicar tarefa</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="teacherLessonsTab" class="tab-panel">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Conteudos</span>
+                        <h2>Aulas publicadas</h2>
+                    </div>
+                </div>
+                <div id="listaAulas" class="cards-container"></div>
+            </section>
+
+            <section id="teacherSubmissionsTab" class="tab-panel">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Trabalhos</span>
+                        <h2>Tarefas recebidas dos alunos</h2>
+                    </div>
+                </div>
+                <div id="listaRecebimentos" class="cards-container"></div>
+            </section>
+
+            <section id="teacherProfileTab" class="tab-panel">
+                <div class="profile-editor-shell">
+                    <div class="profile-preview-card">
+                        <div class="avatar-shell xlarge">
+                            <img id="teacherAvatarProfile" alt="Foto do perfil do professor">
+                        </div>
+                        <h3 id="teacherProfileName"></h3>
+                        <p id="teacherProfileRole"></p>
+                    </div>
+
+                    <form id="teacherProfileForm" class="lesson-form">
+                        <h3>Atualizar perfil</h3>
+                        <label class="field" for="teacherDiscipline">
+                            <span>Disciplina</span>
+                            <input id="teacherDiscipline" type="text">
+                        </label>
+                        <label class="field" for="teacherResumo">
+                            <span>Resumo pedagogico</span>
+                            <textarea id="teacherResumo"></textarea>
+                        </label>
+                        <label class="field" for="teacherAvatarInput">
+                            <span>Foto de perfil</span>
+                            <input id="teacherAvatarInput" type="file" accept="image/*">
+                        </label>
+                        <button type="submit" class="primary-button">Guardar perfil</button>
+                    </form>
+                </div>
+            </section>
         </section>
     </main>
 
+    <script src="../js/school-data.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/professor.js"></script>
 </body>

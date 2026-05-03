@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
@@ -11,9 +11,9 @@
         <section class="auth-card">
             <a href="index.html" class="auth-brand">Oshetu</a>
             <span class="eyebrow">Criacao de conta</span>
-            <h1>Comeca com o perfil certo para o teu fluxo.</h1>
+            <h1>Seleciona o perfil certo e entra na estrutura da escola.</h1>
             <p class="auth-copy">
-                Define os teus dados, escolhe o tipo de utilizador e entra numa experiencia mais interativa.
+                Alunos sao encaminhados automaticamente para classes e turmas. Professores e gestao recebem paines proprios.
             </p>
 
             <div id="authMessage" class="status-message" aria-live="polite"></div>
@@ -46,15 +46,33 @@
                     <div class="role-grid" id="roleGrid">
                         <button class="role-option" type="button" data-role="aluno" aria-pressed="false">
                             <strong>Aluno</strong>
-                            <span>Acede a disciplinas, aulas e recursos.</span>
+                            <span>Vai para a sua classe e turma conforme o perfil.</span>
                         </button>
                         <button class="role-option" type="button" data-role="professor" aria-pressed="false">
                             <strong>Professor</strong>
-                            <span>Organiza perfil, aulas e materiais.</span>
+                            <span>Publica aulas, recebe tarefas e acompanha interatividade.</span>
+                        </button>
+                        <button class="role-option" type="button" data-role="gestao" aria-pressed="false">
+                            <strong>Gestao</strong>
+                            <span>Ve o desempenho completo de alunos, professores e turmas.</span>
                         </button>
                     </div>
                     <input id="tipoUsuario" type="hidden" required>
                 </div>
+
+                <label class="field" id="studentProfileField" for="perfilAluno">
+                    <span>Perfil do aluno</span>
+                    <select id="perfilAluno">
+                        <option value="ciencias">Ciencias</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="humanidades">Humanidades</option>
+                    </select>
+                </label>
+
+                <label class="field" id="teacherDisciplineField" for="disciplinaProfessor" hidden>
+                    <span>Disciplina principal do professor</span>
+                    <input id="disciplinaProfessor" type="text" placeholder="Ex.: Matematica">
+                </label>
 
                 <button type="submit" class="primary-button auth-submit">Criar conta</button>
             </form>
@@ -63,6 +81,7 @@
         </section>
     </main>
 
+    <script src="../js/school-data.js"></script>
     <script src="../js/auth.js"></script>
 </body>
 </html>

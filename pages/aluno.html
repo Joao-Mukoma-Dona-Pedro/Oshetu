@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
@@ -21,13 +21,16 @@
     </header>
 
     <main class="dashboard-shell">
-        <section class="dashboard-panel student-overview">
-            <div class="panel-copy">
-                <span class="eyebrow">Visao geral</span>
-                <h1>Encontra as tuas disciplinas e materiais mais rapido.</h1>
-                <p>
-                    Pesquisa, filtra e expande as aulas para perceber o que esta disponivel em cada disciplina.
-                </p>
+        <section class="dashboard-panel dashboard-hero-card">
+            <div class="profile-hero">
+                <div class="avatar-shell large">
+                    <img id="studentAvatar" alt="Foto de perfil do aluno">
+                </div>
+                <div class="profile-hero-copy">
+                    <span class="eyebrow">Visao geral</span>
+                    <h1 id="studentHeroTitle">Tu agora tens classe, turma, tarefas e estatisticas no mesmo painel.</h1>
+                    <p id="studentHeroText">A plataforma acompanha aulas vistas, trabalhos enviados e o teu progresso individual em tempo real.</p>
+                </div>
             </div>
 
             <div class="metric-grid">
@@ -37,38 +40,96 @@
                 </article>
                 <article class="metric-card">
                     <strong id="aulasCount">0</strong>
-                    <span>Aulas</span>
+                    <span>Aulas vistas</span>
                 </article>
                 <article class="metric-card">
                     <strong id="videosCount">0</strong>
-                    <span>Recursos com video</span>
+                    <span>Tarefas</span>
                 </article>
             </div>
         </section>
 
         <section class="dashboard-panel">
-            <div class="panel-toolbar">
-                <label class="search-field" for="pesquisaDisciplina">
-                    <span class="sr-only">Pesquisar disciplina</span>
-                    <input type="text" id="pesquisaDisciplina" placeholder="Pesquisar disciplina ou professor...">
-                </label>
-
-                <div id="filtrosAluno" class="chip-group">
-                    <button class="chip is-active" type="button" data-filter="todos">Todos</button>
-                    <button class="chip" type="button" data-filter="video">Com video</button>
-                    <button class="chip" type="button" data-filter="pdf">Com PDFs</button>
-                    <button class="chip" type="button" data-filter="recentes">Mais recentes</button>
-                </div>
-
-                <button id="toggleExpandir" class="ghost-button" type="button">Expandir tudo</button>
+            <div class="tab-strip" id="studentTabs">
+                <button class="tab-button is-active" type="button" data-tab-target="studentOverviewTab">Resumo</button>
+                <button class="tab-button" type="button" data-tab-target="studentLessonsTab">Aulas</button>
+                <button class="tab-button" type="button" data-tab-target="studentTasksTab">Tarefas</button>
+                <button class="tab-button" type="button" data-tab-target="studentProfileTab">Perfil</button>
             </div>
 
             <div id="feedbackAluno" class="status-message" aria-live="polite"></div>
-            <p id="resultadoPesquisa" class="helper-text"></p>
-            <div id="listaDisciplinas" class="cards-container"></div>
+
+            <section id="studentOverviewTab" class="tab-panel is-active">
+                <div class="student-placement-panel">
+                    <div class="section-header-inline">
+                        <div>
+                            <span class="eyebrow">Encaminhamento escolar</span>
+                            <h2>Perfil, classe e turma</h2>
+                        </div>
+                    </div>
+                    <div id="studentPlacement" class="student-info-grid"></div>
+                    <div id="studentStatsChart"></div>
+                </div>
+            </section>
+
+            <section id="studentLessonsTab" class="tab-panel">
+                <div class="panel-toolbar">
+                    <label class="search-field" for="pesquisaDisciplina">
+                        <span class="sr-only">Pesquisar disciplina</span>
+                        <input type="text" id="pesquisaDisciplina" placeholder="Pesquisar disciplina, professor ou aula...">
+                    </label>
+                    <div class="mini-toggle-group">
+                        <button class="mini-toggle is-active" type="button" data-filter-lessons="all">Todas</button>
+                        <button class="mini-toggle" type="button" data-filter-lessons="pending">Por ver</button>
+                        <button class="mini-toggle" type="button" data-filter-lessons="watched">Vistas</button>
+                    </div>
+                </div>
+                <div id="listaDisciplinas" class="cards-container"></div>
+            </section>
+
+            <section id="studentTasksTab" class="tab-panel">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Trabalhos escolares</span>
+                        <h2>Enviar tarefas aos professores</h2>
+                    </div>
+                    <div class="mini-toggle-group">
+                        <button class="mini-toggle is-active" type="button" data-filter-tasks="all">Todas</button>
+                        <button class="mini-toggle" type="button" data-filter-tasks="pending">Pendentes</button>
+                        <button class="mini-toggle" type="button" data-filter-tasks="submitted">Enviadas</button>
+                    </div>
+                </div>
+                <div id="listaTarefas" class="task-grid"></div>
+            </section>
+
+            <section id="studentProfileTab" class="tab-panel">
+                <div class="profile-editor-shell">
+                    <div class="profile-preview-card">
+                        <div class="avatar-shell xlarge">
+                            <img id="studentAvatarProfile" alt="Foto do perfil do aluno">
+                        </div>
+                        <h3 id="studentProfileName"></h3>
+                        <p id="studentProfileRole"></p>
+                    </div>
+
+                    <form id="studentProfileForm" class="lesson-form">
+                        <h3>Atualizar perfil</h3>
+                        <label class="field" for="studentBio">
+                            <span>Resumo do aluno</span>
+                            <textarea id="studentBio" placeholder="Fala um pouco sobre os teus interesses e objetivos."></textarea>
+                        </label>
+                        <label class="field" for="studentAvatarInput">
+                            <span>Foto de perfil</span>
+                            <input id="studentAvatarInput" type="file" accept="image/*">
+                        </label>
+                        <button type="submit" class="primary-button">Guardar perfil</button>
+                    </form>
+                </div>
+            </section>
         </section>
     </main>
 
+    <script src="../js/school-data.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/aluno.js"></script>
 </body>

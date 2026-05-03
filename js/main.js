@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     if (!document.body.classList.contains("home-page")) {
         return;
     }
@@ -6,35 +6,63 @@
     const personaContent = {
         aluno: {
             label: "Aluno",
-            title: "Uma jornada mais clara para acompanhar disciplinas e materiais.",
-            text: "O estudante encontra aulas, recursos e indicacoes de forma simples, sem perder tempo procurando informacoes espalhadas.",
+            title: "Uma jornada com classe, turma, tarefas e estatisticas no mesmo lugar.",
+            text: "O estudante entra pelo proprio perfil, e a plataforma organiza acesso a aulas, tarefas e desempenho individual sem informacoes espalhadas.",
             points: [
-                "Pesquisa rapida por disciplina e professor.",
-                "Aulas expandidas com materiais e recursos.",
-                "Leitura visual do proprio percurso de aprendizagem."
+                "Encaminhamento automatico para classe e turma conforme o perfil.",
+                "Marcacao de aulas vistas e envio de tarefas aos professores.",
+                "Leitura visual do proprio progresso, media e participacao."
             ]
         },
         professor: {
             label: "Professor",
-            title: "Mais controle para planear aulas e atualizar recursos.",
-            text: "O professor organiza o proprio perfil, adiciona conteudos e mantem uma visao pratica do que ja foi preparado para os alunos.",
+            title: "Mais controle para publicar aulas, receber trabalhos e acompanhar a turma.",
+            text: "O professor publica conteudos, recebe tarefas feitas pelos alunos e identifica rapidamente quem assistiu as aulas e quem precisa de mais apoio.",
             points: [
-                "Cadastro de aulas com topico, data, descricao e recursos.",
-                "Edicao rapida de materiais e estrutura do curso.",
-                "Feedback visual do proprio volume de conteudos."
+                "Criacao de aulas com materiais, resumo e video.",
+                "Recebimento de trabalhos enviados pelos alunos no proprio painel.",
+                "Grafico de desempenho e interatividade por aluno."
             ]
         },
         gestao: {
             label: "Gestao",
-            title: "Uma visao mais limpa do que acontece na experiencia escolar.",
-            text: "A gestao percebe o nivel de organizacao academica e enxerga onde a plataforma gera mais clareza operacional.",
+            title: "Uma visao completa da escola, inclusive por turma e por classe.",
+            text: "A gestao acompanha o progresso geral, a distribuicao de alunos e o desempenho medio de todas as turmas para agir com mais clareza.",
             points: [
-                "Centralizacao de fluxos em uma unica experiencia.",
-                "Leitura mais facil do estado das aulas e perfis.",
-                "Melhor comunicacao do valor da plataforma."
+                "Leitura consolidada do desempenho de todos os alunos.",
+                "Grafico com medias por turma e por classe.",
+                "Monitoramento da atividade de professores, aulas e tarefas."
             ]
         }
     };
+
+    const homeCover = document.getElementById("homeCover");
+    const coverDots = Array.from(document.querySelectorAll(".hero-cover-dots span"));
+    const coverImages = [
+        "../assets/imagens/IMG-20251023-WA0033.jpg",
+        "../assets/imagens/IMG-20251023-WA0013.jpg",
+        "../assets/imagens/IMG-20251023-WA0047.jpg"
+    ];
+    let activeCover = 0;
+
+    function setCover(index) {
+        if (!homeCover || !coverImages[index]) {
+            return;
+        }
+
+        activeCover = index;
+        homeCover.style.setProperty("--home-cover", `url("${coverImages[index]}")`);
+        coverDots.forEach((dot, dotIndex) => {
+            dot.classList.toggle("is-active", dotIndex === index);
+        });
+    }
+
+    setCover(activeCover);
+    if (homeCover && coverImages.length > 1) {
+        window.setInterval(() => {
+            setCover((activeCover + 1) % coverImages.length);
+        }, 5200);
+    }
 
     const tabs = Array.from(document.querySelectorAll(".persona-tab"));
     const personaLabel = document.getElementById("personaLabel");

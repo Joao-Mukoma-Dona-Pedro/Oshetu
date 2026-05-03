@@ -1,0 +1,33 @@
+#gestao-body {
+    background:
+        radial-gradient(circle at top right, rgba(148, 103, 231, 0.16), transparent 24%),
+        linear-gradient(180deg, #f7f5ff 0%, #f1edff 100%);
+}
+
+.management-header {
+    background: linear-gradient(135deg, #5b3bb2 0%, #8c63e6 100%);
+}
+
+.management-overview {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.management-grid .interaction-card,
+.management-teacher-grid .profile-card {
+    height: 100%;
+}
+
+.management-teacher-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.management-row {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    align-items: center;
+}
+
+@media (max-width: 900px) {
+    .management-row {
+        grid-template-columns: 1fr;
+    }
+}
