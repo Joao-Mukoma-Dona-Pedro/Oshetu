@@ -45,15 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let student = window.OkwetuData.getStudentByEmail(usuario.email);
 
     const welcome = document.getElementById("welcome");
-    const overviewTarget = document.getElementById("studentPlacement");
-    const chartTarget = document.getElementById("studentStatsChart");
-    const lessonsTarget = document.getElementById("listaDisciplinas");
-    const tasksTarget = document.getElementById("listaTarefas");
-    const inputPesquisa = document.getElementById("pesquisaDisciplina");
+const overviewTarget = document.getElementById("studentPlacement");
+const chartTarget = document.getElementById("studentStatsChart");
+const lessonsTarget = document.getElementById("listaDisciplinas");
+const tasksTarget = document.getElementById("listaTarefas");
+const inputPesquisa = document.getElementById("pesquisaDisciplina");
 
-    if (welcome) {
-        welcome.textContent = `Bem-vindo, ${usuario.nome}`;
-    }
+if (welcome) {
+    welcome.textContent = `Bem-vindo, ${usuario.nome}`;
+}
 
     function syncProfileVisuals() {
         const user = window.OkwetuData.getUserByEmail(usuario.email);
@@ -240,50 +240,87 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    async function saveProfile(event) {
-        event.preventDefault();
-        const file = document.getElementById("studentAvatarInput").files[0];
-        const payload = {
-            bio: document.getElementById("studentBio").value.trim(),
-        };
-        if (file) {
-            payload.avatar = await fileToDataUrl(file);
-        }
-        window.OkwetuData.updateStudentProfile(usuario.email, payload);
-        statusAluno("Perfil do aluno atualizado com sucesso.", "success");
-        refresh(inputPesquisa.value);
-        document.getElementById("studentAvatarInput").value = "";
+
+   async function saveProfile(event) {
+    event.preventDefault();
+
+    const file = document.getElementById("studentAvatarInput").files[0];
+
+    const payload = {
+        bio: document.getElementById("studentBio").value.trim(),
+    };
+
+    if (file) {
+        payload.avatar = await fileToDataUrl(file);
     }
 
-    function bindFilters() {
-        document.querySelectorAll("[data-filter-lessons]").forEach((button) => {
-            button.addEventListener("click", () => {
-                activeLessonFilter = button.dataset.filterLessons;
-                document.querySelectorAll("[data-filter-lessons]").forEach((item) => item.classList.toggle("is-active", item === button));
-                renderLessons(inputPesquisa.value);
-            });
+    window.OkwetuData.updateStudentProfile(usuario.email, payload);
+
+    statusAluno("Perfil do aluno atualizado com sucesso.", "success");
+
+    refresh(inputPesquisa.value);
+
+    document.getElementById("studentAvatarInput").value = "";
+}
+
+function bindFilters() {
+    document.querySelectorAll("[data-filter-lessons]").forEach((button) => {
+        button.addEventListener("click", () => {
+            activeLessonFilter = button.dataset.filterLessons;
+
+            document
+                .querySelectorAll("[data-filter-lessons]")
+                .forEach((item) =>
+                    item.classList.toggle("is-active", item === button)
+                );
+
+            renderLessons(inputPesquisa.value);
         });
-        document.querySelectorAll("[data-filter-tasks]").forEach((button) => {
-            button.addEventListener("click", () => {
-                activeTaskFilter = button.dataset.filterTasks;
-                document.querySelectorAll("[data-filter-tasks]").forEach((item) => item.classList.toggle("is-active", item === button));
-                renderTasks();
-            });
+    });
+
+    document.querySelectorAll("[data-filter-tasks]").forEach((button) => {
+        button.addEventListener("click", () => {
+            activeTaskFilter = button.dataset.filterTasks;
+
+            document
+                .querySelectorAll("[data-filter-tasks]")
+                .forEach((item) =>
+                    item.classList.toggle("is-active", item === button)
+                );
+
+            renderTasks();
         });
-    }
+    });
+}
 
-    function refresh(filter = "") {
-        syncProfileVisuals();
-        updateTopMetrics();
-        renderPlacement();
-        renderChart();
-        renderLessons(filter);
-        renderTasks();
-    }
+function refresh(filter = "") {
+    syncProfileVisuals();
+    updateTopMetrics();
+    renderPlacement();
+    renderChart();
+    renderLessons(filter);
+    renderTasks();
+}
 
-    inputPesquisa.addEventListener("input", () => renderLessons(inputPesquisa.value));
-    document.getElementById("studentProfileForm").addEventListener("submit", saveProfile);
-    bindFilters();
-    statusAluno("O teu painel agora tem abas, foto de perfil e filtros para aulas e tarefas.", "success");
-    refresh();
+function logout() {
+    localStorage.removeItem("usuario");
+    window.location.href = "index.html";
+}
+
+inputPesquisa.addEventListener("input", () => {
+    renderLessons(inputPesquisa.value);
+});
+
+document
+    .getElementById("studentProfileForm")
+    .addEventListener("submit", saveProfile);
+
+bindFilters();
+
+statusAluno(
+    "O teu painel agora tem abas, foto de perfil e filtros para aulas e tarefas.",
+    "success"
+);
+
+refresh();
 });
