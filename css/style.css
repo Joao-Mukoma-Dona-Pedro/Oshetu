@@ -5,7 +5,7 @@
     --bg-soft: rgba(255, 255, 255, 0.9);
 
     --ink: #10213f;
-    --muted: #4c5d7a;
+    --muted: #64748b;
 
     --primary: #1f5fbf;
     --primary-light: #3f8cff;
@@ -14,8 +14,8 @@
     --accent: #5aa2ff;
 
     --border: rgba(17, 45, 92, 0.08);
-
-    --shadow: 0 20px 40px rgba(20, 60, 120, 0.10);
+;
+   --shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 
     --success: #1f8f5f;
     --warning: #d4861a;
@@ -32,11 +32,10 @@ html {
 
 body {
     margin: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family:'Inter', sans-serif;
     color: var(--ink);
     background:
-        radial-gradient(circle at top left, rgba(36, 95, 84, 0.09), transparent 32%),
-        linear-gradient(180deg, #f8faf4 0%, #eef3ea 48%, #ffffff 100%);
+linear-gradient(180deg,#f7f9fc 0%,#f3f6fb 100%);
 }
 
 a {
@@ -93,9 +92,15 @@ button {
 }
 
 .primary-button {
-    background: linear-gradient(135deg,#184b9b 0%, #2d74da 100%);
+    background: #1f5fbf;
+    box-shadow: 0 6px 18px rgba(31, 95, 191, 0.18);
     color: #ffffff;
     box-shadow: 0 12px 24px rgba(21, 63, 57, 0.2);
+}
+
+.primary-button:hover {
+    transform: translateY(-1px);
+    background: #1b54aa;
 }
 
 .secondary-button {
@@ -153,7 +158,8 @@ button {
 .auth-card h1,
 .panel-copy h1 {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
     line-height: 1.08;
 }
 
@@ -217,7 +223,7 @@ button {
 .cta-section {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 1.2rem 5vw 4.4rem;
+    padding: 3rem 6vw 6rem;
 }
 
 .hero-section {
@@ -232,7 +238,7 @@ button {
     isolation: isolate;
     color: #ffffff;
     background-image:
-        linear-gradient(90deg,rgba(10, 35, 82, 0.92) 0%,rgba(25, 76, 156, 0.82) 50%,rgba(63, 140, 255, 0.45) 100%), var(--home-cover, url("../assets/imagens/IMG-20251023-WA0033.jpg"));
+        linear-gradient(90deg,rgba(15, 40, 90, 0.78) 0%,rgba(31, 95, 191, 0.58) 55%,rgba(90, 162, 255, 0.22) 100%), var(--home-cover, url("../assets/imagens/IMG-20251023-WA0033.jpg"));
     background-size: cover;
     background-position: center;
     transition: background-image 0.6s ease;
@@ -309,7 +315,9 @@ button {
 .auth-card {
     background: rgba(255, 255, 255, 0.911);
     border: 1px solid var(--border);
+    border-radius: 24px;
     box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .metric-card {

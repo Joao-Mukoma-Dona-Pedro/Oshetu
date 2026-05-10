@@ -10,19 +10,44 @@
 </head>
 <body id="gestao-body">
     <header class="dashboard-header management-header">
-        <div>
-            <a href="index.html" class="dashboard-brand">Oshetu</a>
-            <p class="dashboard-subtitle">Painel de gestao</p>
+            <div>
+                <a href="index.html" class="dashboard-brand">Oshetu</a>
+                <p class="dashboard-subtitle">Painel de gestao</p>
+            </div>
+
+            <div class="topbar-actions">
+                <div id="welcome" class="welcome-chip"></div>
+                <button class="secondary-button" type="button" onclick="logout()">Sair</button>
+            </div>
+        </header>
+
+        <main class="dashboard-shell">
+            <section class="dashboard-panel dashboard-hero-card">
+                <div class="management-alerts">
+        <div class="alert-card danger">
+            <span>⚠</span>
+            <div>
+                <strong>Turma 10B em queda</strong>
+                <p>O desempenho caiu 12% esta semana.</p>
+            </div>
         </div>
 
-        <div class="topbar-actions">
-            <div id="welcome" class="welcome-chip"></div>
-            <button class="secondary-button" type="button" onclick="logout()">Sair</button>
+        <div class="alert-card warning">
+            <span>📌</span>
+            <div>
+                <strong>17 alunos com faltas elevadas</strong>
+                <p>Necessitam acompanhamento.</p>
+            </div>
         </div>
-    </header>
 
-    <main class="dashboard-shell">
-        <section class="dashboard-panel dashboard-hero-card">
+        <div class="alert-card success">
+            <span>📈</span>
+            <div>
+                <strong>Matemática melhorou</strong>
+                <p>A média geral aumentou 8%.</p>
+            </div>
+        </div>
+    </div>
             <div class="profile-hero">
                 <div class="avatar-shell large">
                     <img id="managementAvatar" alt="Foto de perfil da gestao">
