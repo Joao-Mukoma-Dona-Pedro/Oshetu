@@ -1,15 +1,22 @@
 ﻿@charset "utf-8";
 
 :root {
-    --bg: #f5f7f2;
-    --bg-soft: #ffffff;
-    --ink: #c9c919cc;
-    --muted: #183991;
-    --primary: #1b4fc7;
-    --primary-strong: #151d3f;
-    --accent: #c4bf2f;
-    --border: rgba(19, 34, 56, 0.08);
-    --shadow: 0 20px 40px rgba(15, 47, 87, 0.08);
+    --bg: #eef4ff;
+    --bg-soft: rgba(255, 255, 255, 0.9);
+
+    --ink: #10213f;
+    --muted: #4c5d7a;
+
+    --primary: #1f5fbf;
+    --primary-light: #3f8cff;
+    --primary-strong: #123d82;
+
+    --accent: #5aa2ff;
+
+    --border: rgba(17, 45, 92, 0.08);
+
+    --shadow: 0 20px 40px rgba(20, 60, 120, 0.10);
+
     --success: #1f8f5f;
     --warning: #d4861a;
     --danger: #ba3434;
@@ -86,7 +93,7 @@ button {
 }
 
 .primary-button {
-    background: linear-gradient(135deg, #1d2750 0%, #12468f 58%);
+    background: linear-gradient(135deg,#184b9b 0%, #2d74da 100%);
     color: #ffffff;
     box-shadow: 0 12px 24px rgba(21, 63, 57, 0.2);
 }
@@ -98,9 +105,27 @@ button {
 }
 
 .ghost-button {
-    background: transparent;
-    color: var(--primary);
-    border: 1px solid rgba(36, 95, 84, 0.22);
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(10px);
+
+    transition:
+        transform 0.22s ease,
+        background-color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.ghost-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.hero-actions .ghost-button {
+    color: #ffffff;
+    font-weight: 700;
 }
 
 .eyebrow {
@@ -207,8 +232,7 @@ button {
     isolation: isolate;
     color: #ffffff;
     background-image:
-        linear-gradient(90deg, rgba(12, 33, 30, 0.88) 0%, rgba(20, 50, 45, 0.68) 48%, rgba(128, 95, 43, 0.2) 100%),
-        var(--home-cover, url("../assets/imagens/IMG-20251023-WA0033.jpg"));
+        linear-gradient(90deg,rgba(10, 35, 82, 0.92) 0%,rgba(25, 76, 156, 0.82) 50%,rgba(63, 140, 255, 0.45) 100%), var(--home-cover, url("../assets/imagens/IMG-20251023-WA0033.jpg"));
     background-size: cover;
     background-position: center;
     transition: background-image 0.6s ease;
@@ -337,7 +361,7 @@ button {
 .hero-showcase {
     padding: 1.8rem;
     border-radius: 2rem;
-    background: linear-gradient(145deg, #173f39 0%, #49684b 58%, #b58b42 100%);
+    background: linear-gradient(145deg,#123d82 0%, #1f5fbf 58%,#4a95ff 100%);
     box-shadow: 0 28px 60px rgba(21, 63, 57, 0.22);
 }
 
@@ -423,7 +447,7 @@ button {
 .persona-tab.is-active,
 .chip.is-active,
 .role-option.is-active {
-    background: linear-gradient(135deg, #245f54 0%, #7a7d4c 62%, #c99a43 100%);
+    background: linear-gradient(135deg,#184b9b 0%,#2d74da 60%,#5aa2ff 100%);
     color: #ffffff;
     box-shadow: 0 12px 24px rgba(21, 63, 57, 0.18);
 }
@@ -484,7 +508,7 @@ button {
     gap: 1rem;
     padding: 1.8rem;
     border-radius: 1.8rem;
-    background: linear-gradient(135deg, #e7efe4 0%, #f7efd8 55%, #ffffff 100%);
+    background: linear-gradient(135deg,#edf4ff 0%,#dbe9ff 55%,#ffffff 100%);
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
 }
@@ -512,8 +536,7 @@ button {
     place-items: center;
     padding: 2rem 1rem;
     background:
-        radial-gradient(circle at top right, rgba(201, 154, 67, 0.18), transparent 34%),
-        linear-gradient(135deg, #153f39 0%, #2f695d 52%, #c99a43 100%);
+radial-gradient(circle at top right, rgba(90, 162,  255, 0.18), transparent 34%), linear-gradient(135deg, #123d82 0%,#1f5fbf 55%,#5aa2ff 100%);
 }
 
 .auth-shell {
@@ -879,7 +902,7 @@ button {
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(135deg, #245f54 0%, #c99a43 100%);
+    background: linear-gradient(135deg,#1f5fbf 0%,#5aa2ff 100%);
 }
 
 .split-panel {
@@ -974,7 +997,7 @@ button {
 
 .tab-button.is-active,
 .mini-toggle.is-active {
-    background: linear-gradient(135deg, #245f54 0%, #c99a43 100%);
+    background: linear-gradient(135deg,#184b9b 0%,#2d74da 60%,#5aa2ff 100%);
     color: #ffffff;
     box-shadow: 0 12px 24px rgba(21, 63, 57, 0.18);
 }
