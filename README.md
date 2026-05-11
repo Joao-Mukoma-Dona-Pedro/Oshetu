@@ -164,3 +164,38 @@ Student interested in Engineering, Physics, and building technology-driven solut
 
 This project is under active development and is part of a broader vision to digitally transform education systems.
 
+---
+
+# Architecture Update
+
+The project now uses a modular frontend architecture prepared for Firebase and future Gemini API integration.
+
+```text
+js/
+  config/
+    firebase-config.example.js
+  dashboard/
+    aluno-dashboard.js
+    professor-dashboard.js
+    gestao-dashboard.js
+  data/
+    school-data.js
+  services/
+    firebase.js
+    auth-service.js
+    database-service.js
+    ai-service.js
+    analytics-service.js
+  ui/
+    cards.js
+    charts.js
+    loading.js
+    notifications.js
+  utils/
+    storage.js
+    formatters.js
+```
+
+Legacy files in `js/` remain as compatibility wrappers so existing references do not break.
+
+Firebase setup notes are available in `docs/FIREBASE_SETUP.md`.

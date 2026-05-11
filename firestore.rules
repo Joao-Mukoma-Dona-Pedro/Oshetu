@@ -1,0 +1,101 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function role() {
+      return signedIn() ? userDoc().data.role : null;
+    }
+
+    function owner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function teacherOrManagement() {
+      return role() in ['professor', 'gestao'];
+    }
+
+    function management() {
+      return role() == 'gestao';
+    }
+
+    match /users/{userId} {
+      allow create: if signedIn() && request.auth.uid == userId;
+      allow read, update: if owner(userId) || management();
+      allow delete: if management();
+    }
+
+    match /students/{studentId} {
+      allow read: if owner(studentId) || teacherOrManagement();
+      allow create: if owner(studentId) || management();
+      allow update: if owner(studentId) || teacherOrManagement();
+      allow delete: if management();
+    }
+
+    match /teachers/{teacherId} {
+      allow read: if signedIn();
+      allow create, update: if owner(teacherId) || management();
+      allow delete: if management();
+    }
+
+    match /management/{docId} {
+      allow read, write: if management();
+    }
+
+    match /classes/{docId} {
+      allow read: if signedIn();
+      allow write: if management();
+    }
+
+    match /turmas/{docId} {
+      allow read: if signedIn();
+      allow write: if management();
+    }
+
+    match /assignments/{docId} {
+      allow read: if signedIn();
+      allow write: if teacherOrManagement();
+    }
+
+    match /lessons/{docId} {
+      allow read: if signedIn();
+      allow write: if teacherOrManagement();
+    }
+
+    match /analytics/{docId} {
+      allow create: if signedIn();
+      allow read, update, delete: if management();
+    }
+
+    match /notifications/{docId} {
+      allow read: if signedIn();
+      allow write: if teacherOrManagement();
+    }
+
+    match /aiInsights/{docId} {
+      allow read: if signedIn();
+      allow write: if teacherOrManagement();
+    }
+
+    match /recommendations/{docId} {
+      allow read: if signedIn();
+      allow write: if teacherOrManagement();
+    }
+
+    match /performanceAnalysis/{docId} {
+      allow read: if signedIn();
+      allow write: if teacherOrManagement();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
