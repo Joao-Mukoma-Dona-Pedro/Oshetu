@@ -1,0 +1,26 @@
+{
+  "name": "oshetu",
+  "version": "1.0.0",
+  "description": "* text=auto",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "check": "node --check js/services/firebase.js && node --check js/services/auth-service.js && node --check js/services/database-service.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joao-Mukoma-Dona-Pedro/Oshetu.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Joao-Mukoma-Dona-Pedro/Oshetu/issues"
+  },
+  "homepage": "https://github.com/Joao-Mukoma-Dona-Pedro/Oshetu#readme",
+  "dependencies": {
+    "firebase": "^12.13.0"
+  }
+}

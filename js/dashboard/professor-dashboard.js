@@ -19,8 +19,11 @@ function fileToDataUrl(file) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const usuario = window.OkwetuData.requireRole("professor");
+document.addEventListener("DOMContentLoaded", async () => {
+    await window.OshetuAuthService?.ready?.();
+    await window.OshetuDatabaseService?.hydrateLocalCache?.();
+
+    const usuario = window.OshetuAuthService?.requireRole?.("professor") || window.OkwetuData.requireRole("professor");
     if (!usuario) return;
 
     setupTeacherTabs();
@@ -258,6 +261,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         window.OkwetuData.addLesson(usuario.email, { title, date, summary, resources, video, audienceClass, audienceTurma });
+        const latestLesson = window.OkwetuData.getTeacherDashboard(usuario.email)?.teacher.lessons[0];
+        if (latestLesson) {
+            window.OshetuDatabaseService?.upsertLesson?.(usuario.email, latestLesson);
+            window.OshetuDatabaseService?.trackAnalytics?.("lesson.created", {
+                teacherEmail: usuario.email,
+                lessonId: latestLesson.id,
+            });
+        }
         event.target.reset();
         initAudienceSelectors();
         statusProfessor(`Aula publicada para ${audienceClass} - Turma ${audienceTurma}.`, "success");
@@ -278,6 +289,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         window.OkwetuData.addAssignment(usuario.email, { title, deadline, description, audienceClass, audienceTurma });
+        const latestAssignment = window.OkwetuData.getTeacherDashboard(usuario.email)?.teacher.assignments[0];
+        if (latestAssignment) {
+            window.OshetuDatabaseService?.upsertAssignment?.(usuario.email, latestAssignment);
+            window.OshetuDatabaseService?.trackAnalytics?.("assignment.created", {
+                teacherEmail: usuario.email,
+                assignmentId: latestAssignment.id,
+            });
+        }
         event.target.reset();
         initAudienceSelectors();
         statusProfessor(`Tarefa publicada para ${audienceClass} - Turma ${audienceTurma}.`, "success");
@@ -292,9 +311,15 @@ document.addEventListener("DOMContentLoaded", () => {
             resumo: document.getElementById("teacherResumo").value.trim(),
         };
         if (file) {
-            payload.avatar = await fileToDataUrl(file);
+            const upload = await window.OshetuDatabaseService?.uploadProfileAvatar?.(usuario.id, file);
+            payload.avatar = upload?.ok ? upload.url : await fileToDataUrl(file);
         }
         window.OkwetuData.updateTeacherProfile(usuario.email, payload);
+        window.OshetuDatabaseService?.update?.("teachers", usuario.id, {
+            disciplina: payload.disciplina,
+            resumo: payload.resumo,
+        });
+        if (payload.avatar) window.OshetuDatabaseService?.update?.("users", usuario.id, { avatar: payload.avatar });
         document.getElementById("teacherAvatarInput").value = "";
         initAudienceSelectors();
         statusProfessor("Perfil do professor atualizado com sucesso.", "success");

@@ -33,8 +33,11 @@ function fileToDataUrl(file) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const usuario = window.OkwetuData.requireRole("aluno");
+document.addEventListener("DOMContentLoaded", async () => {
+    await window.OshetuAuthService?.ready?.();
+    await window.OshetuDatabaseService?.hydrateLocalCache?.();
+
+    const usuario = window.OshetuAuthService?.requireRole?.("aluno") || window.OkwetuData.requireRole("aluno");
     if (!usuario) return;
 
     setupTabs("studentTabs");
@@ -51,8 +54,8 @@ const lessonsTarget = document.getElementById("listaDisciplinas");
 const tasksTarget = document.getElementById("listaTarefas");
 const inputPesquisa = document.getElementById("pesquisaDisciplina");
 
-if (welcome) {
-    welcome.textContent = `Bem-vindo, ${usuario.nome}`;
+    if (welcome) {
+    welcome.textContent = `${window.OshetuFormatters?.greeting?.() || "Bem-vindo"}, ${usuario.nome}`;
 }
 
     function syncProfileVisuals() {
@@ -180,6 +183,12 @@ if (welcome) {
         document.querySelectorAll(".marcar-aula").forEach((button) => {
             button.addEventListener("click", () => {
                 window.OkwetuData.markLessonViewed(student.email, button.dataset.teacher, button.dataset.lesson);
+                window.OshetuDatabaseService?.updateLessonViewed?.(button.dataset.teacher, button.dataset.lesson, student.email);
+                window.OshetuDatabaseService?.trackAnalytics?.("lesson.viewed", {
+                    studentEmail: student.email,
+                    teacherEmail: button.dataset.teacher,
+                    lessonId: button.dataset.lesson,
+                });
                 statusAluno("Aula marcada como vista com sucesso.", "success");
                 refresh(inputPesquisa.value);
             });
@@ -234,6 +243,18 @@ if (welcome) {
                     return;
                 }
                 window.OkwetuData.submitAssignment(student.email, button.dataset.teacher, button.dataset.assignment, content);
+                window.OshetuDatabaseService?.submitAssignment?.(button.dataset.teacher, button.dataset.assignment, {
+                    studentEmail: student.email,
+                    content,
+                    submittedAt: new Date().toISOString().split("T")[0],
+                    status: "Em analise",
+                    score: null,
+                });
+                window.OshetuDatabaseService?.trackAnalytics?.("assignment.submitted", {
+                    studentEmail: student.email,
+                    teacherEmail: button.dataset.teacher,
+                    assignmentId: button.dataset.assignment,
+                });
                 statusAluno("Tarefa enviada ao professor com sucesso.", "success");
                 refresh(inputPesquisa.value);
             });
@@ -251,10 +272,15 @@ if (welcome) {
     };
 
     if (file) {
-        payload.avatar = await fileToDataUrl(file);
+        const upload = await window.OshetuDatabaseService?.uploadProfileAvatar?.(usuario.id, file);
+        payload.avatar = upload?.ok ? upload.url : await fileToDataUrl(file);
     }
 
     window.OkwetuData.updateStudentProfile(usuario.email, payload);
+    if (payload.bio || payload.avatar) {
+        window.OshetuDatabaseService?.update?.("students", usuario.id, { bio: payload.bio });
+        if (payload.avatar) window.OshetuDatabaseService?.update?.("users", usuario.id, { avatar: payload.avatar });
+    }
 
     statusAluno("Perfil do aluno atualizado com sucesso.", "success");
 

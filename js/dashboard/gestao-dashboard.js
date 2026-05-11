@@ -19,8 +19,11 @@ function fileToDataUrl(file) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const usuario = window.OkwetuData.requireRole("gestao");
+document.addEventListener("DOMContentLoaded", async () => {
+    await window.OshetuAuthService?.ready?.();
+    await window.OshetuDatabaseService?.hydrateLocalCache?.();
+
+    const usuario = window.OshetuAuthService?.requireRole?.("gestao") || window.OkwetuData.requireRole("gestao");
     if (!usuario) return;
 
     setupManagementTabs();
@@ -28,6 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function render() {
         const dashboard = window.OkwetuData.getManagementDashboard();
         const user = window.OkwetuData.getUserByEmail(usuario.email);
+        window.OshetuDatabaseService?.trackAnalytics?.("dashboard.viewed", {
+            role: "gestao",
+            totalStudents: dashboard.totalStudents,
+            totalTeachers: dashboard.totalTeachers,
+        });
 
         document.getElementById("welcome").textContent = `Painel central de ${user.nome}`;
         document.getElementById("managementAvatar").src = user.avatar;
@@ -146,9 +154,12 @@ document.addEventListener("DOMContentLoaded", () => {
             nome: document.getElementById("managementName").value.trim(),
         };
         if (file) {
-            payload.avatar = await fileToDataUrl(file);
+            const upload = await window.OshetuDatabaseService?.uploadProfileAvatar?.(usuario.id, file);
+            payload.avatar = upload?.ok ? upload.url : await fileToDataUrl(file);
         }
         window.OkwetuData.updateManagementProfile(usuario.email, payload);
+        window.OshetuDatabaseService?.update?.("management", usuario.id, { nome: payload.nome });
+        if (payload.avatar) window.OshetuDatabaseService?.update?.("users", usuario.id, { avatar: payload.avatar });
         document.getElementById("managementAvatarInput").value = "";
         render();
     });
