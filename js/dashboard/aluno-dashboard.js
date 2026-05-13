@@ -52,6 +52,7 @@ const overviewTarget = document.getElementById("studentPlacement");
 const chartTarget = document.getElementById("studentStatsChart");
 const lessonsTarget = document.getElementById("listaDisciplinas");
 const tasksTarget = document.getElementById("listaTarefas");
+const assessmentsTarget = document.getElementById("studentAssessments");
 const inputPesquisa = document.getElementById("pesquisaDisciplina");
 
     if (welcome) {
@@ -261,6 +262,77 @@ const inputPesquisa = document.getElementById("pesquisaDisciplina");
         });
     }
 
+    function renderAssessments() {
+        const assessments = window.OkwetuData.getStudentAssessments(student.email);
+        const queued = window.OshetuOfflineSyncService?.readQueue?.() || [];
+
+        if (!assessments.length) {
+            assessmentsTarget.innerHTML = `<div class="empty-state">Ainda nao ha testes provinciais para a tua classe.</div>`;
+            return;
+        }
+
+        assessmentsTarget.innerHTML = assessments
+            .map((assessment) => {
+                const isQueued = queued.some((item) => item.payload.assessmentId === assessment.id && item.payload.studentEmail === student.email);
+                return `
+                    <article class="task-card interactive-card assessment-card" data-assessment-card="${assessment.id}">
+                        <div class="disciplina-header">
+                            <div>
+                                <span class="eyebrow">${assessment.disciplina} | ${assessment.classe}</span>
+                                <h3>${assessment.title}</h3>
+                                <p class="professor-nome">${assessment.topic}</p>
+                            </div>
+                            <span class="meta-pill">${assessment.response ? `Nota ${assessment.response.score}%` : assessment.status}</span>
+                        </div>
+                        <p class="aula-descricao">Data prevista: ${assessment.scheduledFor}. As respostas sao guardadas neste dispositivo antes da sincronizacao.</p>
+                        <form class="assessment-form" data-assessment="${assessment.id}">
+                            ${assessment.questions.map((question, questionIndex) => `
+                                <fieldset class="assessment-question">
+                                    <legend>${questionIndex + 1}. ${question.text}</legend>
+                                    ${question.options.map((option, optionIndex) => `
+                                        <label class="choice-row">
+                                            <input type="radio" name="${question.id}" value="${optionIndex}" ${Number(assessment.response?.answers?.[question.id]) === optionIndex ? "checked" : ""}>
+                                            <span>${option}</span>
+                                        </label>
+                                    `).join("")}
+                                </fieldset>
+                            `).join("")}
+                            <button class="btn-ver-aulas" type="submit">${assessment.response ? "Atualizar respostas" : "Enviar respostas"}</button>
+                        </form>
+                        <p class="inline-note">${isQueued ? "Aguardando internet para sincronizar." : assessment.response?.synced ? "Sincronizado com a nuvem." : "Modo offline-first ativo."}</p>
+                    </article>
+                `;
+            })
+            .join("");
+
+        document.querySelectorAll(".assessment-form").forEach((form) => {
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const assessmentId = form.dataset.assessment;
+                const assessment = window.OkwetuData.getStudentAssessments(student.email).find((item) => item.id === assessmentId);
+                const answers = {};
+                assessment.questions.forEach((question) => {
+                    const checked = form.querySelector(`input[name="${question.id}"]:checked`);
+                    if (checked) answers[question.id] = Number(checked.value);
+                });
+
+                if (Object.keys(answers).length !== assessment.questions.length) {
+                    statusAluno("Responde todas as perguntas antes de enviar.", "error");
+                    return;
+                }
+
+                const result = await window.OshetuOfflineSyncService.persistAssessmentResponse({
+                    assessmentId,
+                    studentEmail: student.email,
+                    schoolId: student.schoolId,
+                    answers,
+                });
+                statusAluno(result.queued ? "Respostas guardadas localmente. Serao sincronizadas quando houver internet." : "Respostas guardadas e sincronizadas.", "success");
+                refresh(inputPesquisa.value);
+            });
+        });
+    }
+
 
    async function saveProfile(event) {
     event.preventDefault();
@@ -326,6 +398,7 @@ function refresh(filter = "") {
     renderChart();
     renderLessons(filter);
     renderTasks();
+    renderAssessments();
 }
 
 function logout() {

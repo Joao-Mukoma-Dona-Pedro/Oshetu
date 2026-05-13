@@ -8,6 +8,10 @@
         analytics: "analytics",
         notifications: "notifications",
         aiInsights: "aiInsights",
+        schools: "schools",
+        curriculum: "curriculum",
+        provincialAssessments: "provincialAssessments",
+        assessmentResponses: "assessmentResponses",
         classes: "classes",
         turmas: "turmas",
         assignments: "assignments",
@@ -273,6 +277,24 @@
         });
     }
 
+    async function saveAssessmentResponse(payload = {}) {
+        if (!payload.assessmentId || !payload.studentEmail) {
+            return { ok: false, reason: "invalid-assessment-response" };
+        }
+
+        const id = payload.responseId || payload.response?.id || `${payload.assessmentId}_${payload.studentEmail.replace(/[^a-z0-9]/gi, "_")}`;
+        return create(COLLECTIONS.assessmentResponses, {
+            assessmentId: payload.assessmentId,
+            studentEmail: payload.studentEmail,
+            schoolId: payload.schoolId || payload.response?.schoolId || null,
+            answers: payload.answers || {},
+            score: payload.response?.score ?? null,
+            correct: payload.response?.correct ?? null,
+            total: payload.response?.total ?? null,
+            source: payload.source || "oshetu-web",
+        }, id);
+    }
+
     async function seedFirestoreFromLocal() {
         const firestore = db();
         if (!firestore || !window.OkwetuData) return { ok: false, reason: "firebase-unavailable" };
@@ -282,6 +304,13 @@
         const users = Array.isArray(state.users) ? state.users : [];
         const students = Array.isArray(state.students) ? state.students : [];
         const teachers = Array.isArray(state.teachers) ? state.teachers : [];
+        const schools = Array.isArray(state.schools) ? state.schools : [];
+        const curriculum = Array.isArray(state.curriculum) ? state.curriculum : [];
+        const assessments = Array.isArray(state.provincialAssessments) ? state.provincialAssessments : [];
+
+        await Promise.all(schools.map((school) => create(COLLECTIONS.schools, school, school.id)));
+        await Promise.all(curriculum.map((item) => create(COLLECTIONS.curriculum, item, item.id)));
+        await Promise.all(assessments.map((assessment) => create(COLLECTIONS.provincialAssessments, assessment, assessment.id)));
 
         await Promise.all(users.map((user) => {
             const id = user.id || user.email.replace(/[^a-z0-9]/gi, "_").toLowerCase();
@@ -337,12 +366,16 @@
         const firestore = db();
         if (!firestore) return { ok: false, provider: "local", reason: "firebase-unavailable" };
 
-        const [users, students, teachers, lessons, assignments] = await Promise.all([
+        const [users, students, teachers, lessons, assignments, schools, curriculum, assessments, assessmentResponses] = await Promise.all([
             list(COLLECTIONS.users),
             list(COLLECTIONS.students),
             list(COLLECTIONS.teachers),
             list(COLLECTIONS.lessons),
             list(COLLECTIONS.assignments),
+            list(COLLECTIONS.schools),
+            list(COLLECTIONS.curriculum),
+            list(COLLECTIONS.provincialAssessments),
+            list(COLLECTIONS.assessmentResponses),
         ]);
 
         if (!users.length && !students.length && !teachers.length) {
@@ -373,6 +406,14 @@
             lessons: lessons.filter((lesson) => lesson.teacherId === teacher.id || lesson.teacherEmail === teacher.email),
             assignments: assignments.filter((assignment) => assignment.teacherId === teacher.id || assignment.teacherEmail === teacher.email),
         }));
+        if (schools.length) state.schools = schools;
+        if (curriculum.length) state.curriculum = curriculum;
+        if (assessments.length) {
+            state.provincialAssessments = assessments.map((assessment) => ({
+                ...assessment,
+                responses: assessmentResponses.filter((response) => response.assessmentId === assessment.id),
+            }));
+        }
 
         saveLocalState(state);
         return { ok: true, provider: "firebase" };
@@ -394,6 +435,7 @@
         trackAnalytics,
         createNotification,
         saveAIPlaceholder,
+        saveAssessmentResponse,
         seedFirestoreFromLocal,
         hydrateLocalCache,
     };

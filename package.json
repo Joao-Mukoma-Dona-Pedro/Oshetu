@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "check": "node --check js/services/firebase.js && node --check js/services/auth-service.js && node --check js/services/database-service.js"
+    "check": "node --check js/data/school-data.js && node --check js/services/firebase.js && node --check js/services/auth-service.js && node --check js/services/database-service.js && node --check js/services/ai-service.js && node --check js/services/offline-sync-service.js && node --check js/dashboard/gestao-dashboard.js && node --check js/dashboard/aluno-dashboard.js"
   },
   "repository": {
     "type": "git",

@@ -82,9 +82,13 @@
         <section class="dashboard-panel">
             <div class="tab-strip" id="managementTabs">
                 <button class="tab-button is-active" type="button" data-tab-target="managementOverviewTab">Resumo</button>
+                <button class="tab-button" type="button" data-tab-target="managementSchoolsTab">Escolas</button>
+                <button class="tab-button" type="button" data-tab-target="managementCurriculumTab">Curriculo</button>
+                <button class="tab-button" type="button" data-tab-target="managementAssessmentsTab">Avaliacoes</button>
                 <button class="tab-button" type="button" data-tab-target="managementStudentsTab">Alunos</button>
                 <button class="tab-button" type="button" data-tab-target="managementTeachersTab">Professores</button>
                 <button class="tab-button" type="button" data-tab-target="managementAnalyticsTab">Graficos</button>
+                <button class="tab-button" type="button" data-tab-target="managementGeminiTab">Gemini</button>
                 <button class="tab-button" type="button" data-tab-target="managementProfileTab">Perfil</button>
             </div>
 
@@ -108,6 +112,114 @@
                             </div>
                         </div>
                         <div id="topAlunosGrafico" class="progress-card"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="managementSchoolsTab" class="tab-panel">
+                <div class="split-panel">
+                    <form id="schoolForm" class="lesson-form">
+                        <h3>Cadastrar escola</h3>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="schoolName">
+                                <span>Nome da escola</span>
+                                <input id="schoolName" type="text" required>
+                            </label>
+                            <label class="field" for="schoolCode">
+                                <span>Codigo escolar</span>
+                                <input id="schoolCode" type="text" required>
+                            </label>
+                        </div>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="schoolMunicipio">
+                                <span>Municipio</span>
+                                <input id="schoolMunicipio" type="text" required>
+                            </label>
+                            <label class="field" for="schoolLevel">
+                                <span>Nivel de ensino</span>
+                                <input id="schoolLevel" type="text" required>
+                            </label>
+                        </div>
+                        <label class="field" for="schoolAddress">
+                            <span>Endereco</span>
+                            <input id="schoolAddress" type="text" required>
+                        </label>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="schoolContacts">
+                                <span>Contactos</span>
+                                <input id="schoolContacts" type="text" required>
+                            </label>
+                            <label class="field" for="schoolNif">
+                                <span>NIF</span>
+                                <input id="schoolNif" type="text">
+                            </label>
+                        </div>
+                        <button type="submit" class="primary-button">Adicionar escola</button>
+                    </form>
+                    <div>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Rede provincial</span>
+                                <h2>Escolas supervisionadas</h2>
+                            </div>
+                        </div>
+                        <div id="schoolRegistry" class="management-teacher-grid"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="managementCurriculumTab" class="tab-panel">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Calendario curricular</span>
+                        <h2>Conteudos previstos versus lecionados</h2>
+                    </div>
+                </div>
+                <div id="curriculumCoverage" class="management-teacher-grid"></div>
+            </section>
+
+            <section id="managementAssessmentsTab" class="tab-panel">
+                <div class="split-panel">
+                    <form id="assessmentForm" class="lesson-form">
+                        <h3>Emitir teste provincial</h3>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="assessmentTitle">
+                                <span>Titulo</span>
+                                <input id="assessmentTitle" type="text" required>
+                            </label>
+                            <label class="field" for="assessmentDate">
+                                <span>Data prevista</span>
+                                <input id="assessmentDate" type="date" required>
+                            </label>
+                        </div>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="assessmentClass">
+                                <span>Classe</span>
+                                <input id="assessmentClass" type="text" placeholder="10a Classe" required>
+                            </label>
+                            <label class="field" for="assessmentSubject">
+                                <span>Disciplina</span>
+                                <input id="assessmentSubject" type="text" required>
+                            </label>
+                        </div>
+                        <label class="field" for="assessmentTopic">
+                            <span>Topico curricular</span>
+                            <input id="assessmentTopic" type="text" required>
+                        </label>
+                        <label class="field" for="assessmentQuestions">
+                            <span>Perguntas</span>
+                            <textarea id="assessmentQuestions" placeholder="Uma pergunta por linha. Use alternativas separadas por ponto e virgula: pergunta | certa; alternativa; alternativa"></textarea>
+                        </label>
+                        <button type="submit" class="primary-button">Programar avaliacao</button>
+                    </form>
+                    <div>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Monitoramento</span>
+                                <h2>Testes e resultados</h2>
+                            </div>
+                        </div>
+                        <div id="assessmentRegistry" class="cards-container"></div>
                     </div>
                 </div>
             </section>
@@ -136,6 +248,31 @@
                 <div class="analytics-grid">
                     <div class="progress-card" id="graficoClasses"></div>
                     <div class="progress-card" id="graficoPerfis"></div>
+                </div>
+            </section>
+
+            <section id="managementGeminiTab" class="tab-panel">
+                <div class="split-panel">
+                    <form id="geminiConfigForm" class="lesson-form">
+                        <h3>Configurar Gemini</h3>
+                        <label class="field" for="geminiModel">
+                            <span>Modelo</span>
+                            <input id="geminiModel" type="text" placeholder="gemini-1.5-flash">
+                        </label>
+                        <label class="field" for="geminiApiKey">
+                            <span>API key</span>
+                            <input id="geminiApiKey" type="password" placeholder="Guardar apenas neste navegador">
+                        </label>
+                        <button type="submit" class="primary-button">Ativar Gemini</button>
+                    </form>
+                    <div class="progress-card">
+                        <div class="analytics-card-header">
+                            <span class="eyebrow">Analise automatica</span>
+                            <h3>Relatorio do Gabinete Provincial</h3>
+                        </div>
+                        <div id="geminiInsight"></div>
+                        <button id="generateGeminiReport" class="secondary-button" type="button">Gerar relatorio</button>
+                    </div>
                 </div>
             </section>
 
@@ -179,6 +316,7 @@
     <script src="../js/ui/notifications.js"></script>
     <script src="../js/services/firebase.js"></script>
     <script src="../js/services/database-service.js"></script>
+    <script src="../js/services/offline-sync-service.js"></script>
     <script src="../js/services/auth-service.js"></script>
     <script src="../js/services/ai-service.js"></script>
     <script src="../js/services/analytics-service.js"></script>

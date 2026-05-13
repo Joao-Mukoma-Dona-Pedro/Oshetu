@@ -19,6 +19,23 @@ function fileToDataUrl(file) {
     });
 }
 
+function parseAssessmentQuestions(rawText) {
+    return rawText
+        .split("\n")
+        .map((line, index) => {
+            const [text, optionText = "Opcao correta;Opcao B;Opcao C;Opcao D"] = line.split("|").map((item) => item.trim());
+            if (!text) return null;
+            const options = optionText.split(";").map((item) => item.trim()).filter(Boolean);
+            return {
+                id: `q${index + 1}`,
+                text,
+                options: options.length >= 2 ? options : ["Verdadeiro", "Falso"],
+                correctIndex: 0,
+            };
+        })
+        .filter(Boolean);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     await window.OshetuAuthService?.ready?.();
     await window.OshetuDatabaseService?.hydrateLocalCache?.();
@@ -29,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupManagementTabs();
 
     function render() {
-        const dashboard = window.OkwetuData.getManagementDashboard();
+        const dashboard = window.OkwetuData.getProvincialDashboard();
         const user = window.OkwetuData.getUserByEmail(usuario.email);
         window.OshetuDatabaseService?.trackAnalytics?.("dashboard.viewed", {
             role: "gestao",
@@ -37,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             totalTeachers: dashboard.totalTeachers,
         });
 
-        document.getElementById("welcome").textContent = `Painel central de ${user.nome}`;
+        document.getElementById("welcome").textContent = `${dashboard.province.name} | ${user.nome}`;
         document.getElementById("managementAvatar").src = user.avatar;
         document.getElementById("managementAvatarProfile").src = user.avatar;
         document.getElementById("managementProfileName").textContent = user.nome;
@@ -48,6 +65,88 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("totalProfessores").textContent = dashboard.totalTeachers;
         document.getElementById("totalClasses").textContent = dashboard.totalClasses;
         document.getElementById("totalTurmas").textContent = dashboard.totalTurmas;
+
+        document.getElementById("schoolRegistry").innerHTML = dashboard.schools
+            .map((school) => `
+                <article class="profile-card stat-profile-card interactive-card">
+                    <div>
+                        <span class="eyebrow">${school.municipio} | ${school.codigoEscolar}</span>
+                        <h3>${school.nome}</h3>
+                    </div>
+                    <p>${school.endereco}</p>
+                    <p class="inline-note">${school.nivelEnsino} | Contactos: ${school.contatos}</p>
+                    <div class="resource-summary">
+                        <span class="resource-tag">${school.totalStudents} aluno(s)</span>
+                        <span class="resource-tag">${school.totalTeachers} professor(es)</span>
+                        <span class="resource-tag">Progresso ${school.averageProgress}%</span>
+                        <span class="resource-tag">Testes ${school.assessmentAverage}%</span>
+                    </div>
+                </article>
+            `)
+            .join("");
+
+        document.getElementById("curriculumCoverage").innerHTML = dashboard.curriculumCoverage
+            .map((item) => `
+                <article class="profile-card stat-profile-card ${item.status === "atencao" ? "risk-card" : ""}">
+                    <span class="eyebrow">${item.periodo}</span>
+                    <h3>${item.disciplina} | ${item.classe}</h3>
+                    <p>${item.topico}</p>
+                    <div class="resource-summary">
+                        <span class="resource-tag">Aulas registadas: ${item.lessonsLogged}</span>
+                        <span class="resource-tag">Dominio: ${item.mastery}%</span>
+                        <span class="resource-tag">Meta: ${item.masteryTarget}%</span>
+                        <span class="resource-tag">${item.status}</span>
+                    </div>
+                </article>
+            `)
+            .join("");
+
+        document.getElementById("assessmentRegistry").innerHTML = dashboard.provincialAssessments
+            .map((assessment) => {
+                const avg = assessment.responses.length
+                    ? Math.round(assessment.responses.reduce((sum, response) => sum + response.score, 0) / assessment.responses.length)
+                    : 0;
+                return `
+                    <article class="lesson-card enhanced-lesson-card interactive-card">
+                        <div class="lesson-card-header">
+                            <div>
+                                <span class="eyebrow">${assessment.disciplina} | ${assessment.classe}</span>
+                                <h3>${assessment.title}</h3>
+                                <p>${assessment.topic}</p>
+                            </div>
+                            <span class="lesson-date">${assessment.scheduledFor}</span>
+                        </div>
+                        <div class="resource-summary">
+                            <span class="resource-tag">${assessment.status}</span>
+                            <span class="resource-tag">${assessment.questions.length} pergunta(s)</span>
+                            <span class="resource-tag">${assessment.responses.length} resposta(s)</span>
+                            <span class="resource-tag">Media ${avg}%</span>
+                        </div>
+                    </article>
+                `;
+            })
+            .join("");
+
+        const alertsTarget = document.querySelector(".management-alerts");
+        alertsTarget.innerHTML = dashboard.alerts.length
+            ? dashboard.alerts.map((alert) => `
+                <div class="alert-card ${alert.type === "school-risk" ? "danger" : "warning"}">
+                    <span>!</span>
+                    <div>
+                        <strong>${alert.title}</strong>
+                        <p>${alert.message}</p>
+                    </div>
+                </div>
+            `).join("")
+            : `
+                <div class="alert-card success">
+                    <span>OK</span>
+                    <div>
+                        <strong>Rede provincial sob controlo</strong>
+                        <p>Nenhum alerta critico gerado pelos indicadores atuais.</p>
+                    </div>
+                </div>
+            `;
 
         document.getElementById("graficoTurmas").innerHTML = dashboard.turmaPerformance
             .map((turma) => `
@@ -146,6 +245,67 @@ document.addEventListener("DOMContentLoaded", async () => {
             `)
             .join("");
     }
+
+    document.getElementById("schoolForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const school = window.OkwetuData.addSchool({
+            nome: document.getElementById("schoolName").value.trim(),
+            codigoEscolar: document.getElementById("schoolCode").value.trim(),
+            municipio: document.getElementById("schoolMunicipio").value.trim(),
+            nivelEnsino: document.getElementById("schoolLevel").value.trim(),
+            endereco: document.getElementById("schoolAddress").value.trim(),
+            contatos: document.getElementById("schoolContacts").value.trim(),
+            nif: document.getElementById("schoolNif").value.trim(),
+        });
+        window.OshetuDatabaseService?.create?.("schools", school, school.id);
+        event.target.reset();
+        render();
+    });
+
+    document.getElementById("assessmentForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const questions = parseAssessmentQuestions(document.getElementById("assessmentQuestions").value);
+        const assessment = window.OkwetuData.createProvincialAssessment({
+            title: document.getElementById("assessmentTitle").value.trim(),
+            scheduledFor: document.getElementById("assessmentDate").value,
+            classe: document.getElementById("assessmentClass").value.trim(),
+            disciplina: document.getElementById("assessmentSubject").value.trim(),
+            topic: document.getElementById("assessmentTopic").value.trim(),
+            questions,
+        });
+        window.OshetuDatabaseService?.create?.("provincialAssessments", assessment, assessment.id);
+        window.OshetuDatabaseService?.createNotification?.({
+            title: "Teste provincial programado",
+            message: `${document.getElementById("assessmentSubject").value} - ${document.getElementById("assessmentTopic").value}`,
+            role: "todos",
+            type: "assessment",
+        });
+        event.target.reset();
+        render();
+    });
+
+    document.getElementById("geminiConfigForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const config = window.OshetuAIService.configureGemini({
+            apiKey: document.getElementById("geminiApiKey").value.trim(),
+            model: document.getElementById("geminiModel").value.trim() || "gemini-1.5-flash",
+            enabled: true,
+        });
+        document.getElementById("geminiInsight").innerHTML = `<p class="inline-note">Gemini configurado com modelo ${config.model}.</p>`;
+        document.getElementById("geminiApiKey").value = "";
+    });
+
+    document.getElementById("generateGeminiReport").addEventListener("click", async () => {
+        const target = document.getElementById("geminiInsight");
+        target.innerHTML = `<p class="inline-note">A gerar analise inteligente...</p>`;
+        const report = await window.OshetuAIService.generateProvincialReport(window.OkwetuData.getProvincialDashboard());
+        target.innerHTML = `
+            <h4>${report.title || "Relatorio Gemini"}</h4>
+            <p>${report.text || report.summary}</p>
+            ${(report.actions || []).map((action) => `<span class="resource-tag">${action}</span>`).join("")}
+        `;
+        window.OshetuDatabaseService?.saveAIPlaceholder?.("aiInsights", report);
+    });
 
     document.getElementById("managementProfileForm").addEventListener("submit", async (event) => {
         event.preventDefault();

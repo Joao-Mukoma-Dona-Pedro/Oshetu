@@ -54,6 +54,27 @@ service cloud.firestore {
       allow write: if management();
     }
 
+    match /schools/{docId} {
+      allow read: if signedIn();
+      allow write: if management();
+    }
+
+    match /curriculum/{docId} {
+      allow read: if signedIn();
+      allow write: if management();
+    }
+
+    match /provincialAssessments/{docId} {
+      allow read: if signedIn();
+      allow write: if management();
+    }
+
+    match /assessmentResponses/{docId} {
+      allow create, update: if signedIn();
+      allow read: if teacherOrManagement();
+      allow delete: if management();
+    }
+
     match /turmas/{docId} {
       allow read: if signedIn();
       allow write: if management();

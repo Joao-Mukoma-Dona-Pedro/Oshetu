@@ -55,6 +55,7 @@
                 <button class="tab-button is-active" type="button" data-tab-target="studentOverviewTab">Resumo</button>
                 <button class="tab-button" type="button" data-tab-target="studentLessonsTab">Aulas</button>
                 <button class="tab-button" type="button" data-tab-target="studentTasksTab">Tarefas</button>
+                <button class="tab-button" type="button" data-tab-target="studentAssessmentsTab">Testes</button>
                 <button class="tab-button" type="button" data-tab-target="studentProfileTab">Perfil</button>
             </div>
 
@@ -103,6 +104,16 @@
                 <div id="listaTarefas" class="task-grid"></div>
             </section>
 
+            <section id="studentAssessmentsTab" class="tab-panel">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Monitoramento provincial</span>
+                        <h2>Testes rapidos do Gabinete</h2>
+                    </div>
+                </div>
+                <div id="studentAssessments" class="task-grid"></div>
+            </section>
+
             <section id="studentProfileTab" class="tab-panel">
                 <div class="profile-editor-shell">
                     <div class="profile-preview-card">
@@ -143,6 +154,7 @@
     <script src="../js/ui/notifications.js"></script>
     <script src="../js/services/firebase.js"></script>
     <script src="../js/services/database-service.js"></script>
+    <script src="../js/services/offline-sync-service.js"></script>
     <script src="../js/services/auth-service.js"></script>
     <script src="../js/services/ai-service.js"></script>
     <script src="../js/services/analytics-service.js"></script>

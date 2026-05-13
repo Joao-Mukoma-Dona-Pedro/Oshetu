@@ -29,10 +29,98 @@ const OkwetuData = (() => {
             { nome: "Prof. Dario", email: "dario@okwetu.com", senha: "1234", tipo: "professor" },
             { nome: "Gestao Central", email: "gestao@okwetu.com", senha: "1234", tipo: "gestao" },
         ],
+        province: {
+            id: "gpe-luanda",
+            name: "Gabinete Provincial da Educacao",
+            province: "Luanda",
+            scope: "Supervisao provincial",
+        },
+        schools: [
+            {
+                id: "esc-central-luanda",
+                nome: "Escola Central de Luanda",
+                endereco: "Rua da Educacao, Maianga",
+                municipio: "Luanda",
+                nivelEnsino: "Ensino Secundario",
+                contatos: "+244 900 000 001",
+                nif: "500000001",
+                codigoEscolar: "LDA-SEC-001",
+                responsavel: "Direcao Pedagogica Central",
+                status: "ativa",
+            },
+            {
+                id: "esc-kilamba",
+                nome: "Complexo Escolar do Kilamba",
+                endereco: "Centralidade do Kilamba",
+                municipio: "Belas",
+                nivelEnsino: "I e II Ciclo",
+                contatos: "+244 900 000 002",
+                nif: "",
+                codigoEscolar: "BLS-MIX-002",
+                responsavel: "Coordenacao Pedagogica",
+                status: "ativa",
+            },
+        ],
+        curriculum: [
+            {
+                id: "cur-mat-10-eq1",
+                classe: "10a Classe",
+                disciplina: "Matematica",
+                topico: "Equacoes do primeiro grau",
+                periodo: "1o trimestre - semana 1",
+                expectedBy: "2026-05-17",
+                masteryTarget: 70,
+            },
+            {
+                id: "cur-fis-10-medidas",
+                classe: "10a Classe",
+                disciplina: "Fisica",
+                topico: "Grandezas e medidas",
+                periodo: "1o trimestre - semana 2",
+                expectedBy: "2026-05-24",
+                masteryTarget: 65,
+            },
+            {
+                id: "cur-port-12-texto",
+                classe: "12a Classe",
+                disciplina: "Portugues",
+                topico: "Interpretacao textual",
+                periodo: "1o trimestre - semana 1",
+                expectedBy: "2026-05-17",
+                masteryTarget: 75,
+            },
+        ],
+        provincialAssessments: [
+            {
+                id: "assess-mat-10-eq1",
+                title: "Verificacao provincial de Matematica",
+                classe: "10a Classe",
+                disciplina: "Matematica",
+                topic: "Equacoes do primeiro grau",
+                scheduledFor: "2026-05-15",
+                status: "programada",
+                schoolIds: ["esc-central-luanda", "esc-kilamba"],
+                questions: [
+                    {
+                        id: "q1",
+                        text: "Qual e o valor de x em 2x + 4 = 10?",
+                        options: ["2", "3", "4", "5"],
+                        correctIndex: 1,
+                    },
+                    {
+                        id: "q2",
+                        text: "A equacao x - 7 = 0 tem como solucao:",
+                        options: ["-7", "0", "7", "14"],
+                        correctIndex: 2,
+                    },
+                ],
+                responses: [],
+            },
+        ],
         students: [
-            { email: "ana@okwetu.com", nome: "Ana Silva", perfil: "ciencias", classe: "10a Classe", turma: "A", bio: "Foco em matematica aplicada e ciencias exatas." },
-            { email: "carlos@okwetu.com", nome: "Carlos Neto", perfil: "tecnologia", classe: "11a Classe", turma: "A", bio: "Interesse em logica, criacao digital e projetos praticos." },
-            { email: "lucia@okwetu.com", nome: "Lucia Mendes", perfil: "humanidades", classe: "12a Classe", turma: "B", bio: "Gosta de leitura critica, historia e comunicacao." },
+            { email: "ana@okwetu.com", nome: "Ana Silva", perfil: "ciencias", classe: "10a Classe", turma: "A", schoolId: "esc-central-luanda", bio: "Foco em matematica aplicada e ciencias exatas." },
+            { email: "carlos@okwetu.com", nome: "Carlos Neto", perfil: "tecnologia", classe: "11a Classe", turma: "A", schoolId: "esc-kilamba", bio: "Interesse em logica, criacao digital e projetos praticos." },
+            { email: "lucia@okwetu.com", nome: "Lucia Mendes", perfil: "humanidades", classe: "12a Classe", turma: "B", schoolId: "esc-central-luanda", bio: "Gosta de leitura critica, historia e comunicacao." },
         ],
         teachers: [
             {
@@ -197,6 +285,10 @@ const OkwetuData = (() => {
 
     function migrateState(state) {
         state.users = state.users || [];
+        state.province = state.province || clone(DEMO_STATE.province);
+        state.schools = state.schools || clone(DEMO_STATE.schools);
+        state.curriculum = state.curriculum || clone(DEMO_STATE.curriculum);
+        state.provincialAssessments = state.provincialAssessments || clone(DEMO_STATE.provincialAssessments);
         state.students = state.students || [];
         state.teachers = state.teachers || [];
         state.analytics = state.analytics || {
@@ -221,8 +313,14 @@ const OkwetuData = (() => {
             if (!student.bio) {
                 student.bio = "Perfil academico em construcao.";
             }
+            if (!student.schoolId) {
+                student.schoolId = state.schools[0]?.id || "esc-central-luanda";
+            }
         });
         state.teachers.forEach((teacher) => {
+            if (!teacher.schoolId) {
+                teacher.schoolId = state.schools[0]?.id || "esc-central-luanda";
+            }
             if (!teacher.resumo) {
                 teacher.resumo = "Professor registado recentemente. Perfil pedagogico em atualizacao.";
             }
@@ -242,6 +340,12 @@ const OkwetuData = (() => {
                 assignment.audienceClass = assignment.audienceClass || assignment.classe || "Todas";
                 assignment.audienceTurma = assignment.audienceTurma || assignment.turma || "Todas";
             });
+        });
+        state.provincialAssessments.forEach((assessment) => {
+            assessment.schoolIds = assessment.schoolIds?.length ? assessment.schoolIds : state.schools.map((school) => school.id);
+            assessment.questions = assessment.questions || [];
+            assessment.responses = assessment.responses || [];
+            assessment.status = assessment.status || "rascunho";
         });
         return state;
     }
@@ -323,15 +427,17 @@ const OkwetuData = (() => {
             perfil,
             classe: track.classe,
             turma: pickTurmaForClass(track.classe, state),
+            schoolId: state.schools[0]?.id || "esc-central-luanda",
             bio: "Novo aluno registado na plataforma.",
         };
     }
 
-    function createTeacherRecord(user, disciplina = "Disciplina Geral") {
+    function createTeacherRecord(user, disciplina = "Disciplina Geral", state = readState()) {
         return {
             email: user.email,
             nome: user.nome,
             disciplina: disciplina || "Disciplina Geral",
+            schoolId: state.schools[0]?.id || "esc-central-luanda",
             resumo: "Professor registado recentemente. Perfil pedagogico em atualizacao.",
             classes: ["10a Classe"],
             turmas: ["A", "B"],
@@ -355,7 +461,7 @@ const OkwetuData = (() => {
         }
 
         if (tipo === "professor") {
-            state.teachers.push(createTeacherRecord(newUser, disciplina));
+            state.teachers.push(createTeacherRecord(newUser, disciplina, state));
         }
 
         writeState(state);
@@ -656,6 +762,188 @@ const OkwetuData = (() => {
         return clone(readState().ai);
     }
 
+    function getSchoolById(id, state = readState()) {
+        return state.schools.find((school) => school.id === id) || null;
+    }
+
+    function addSchool(payload) {
+        const state = readState();
+        const school = {
+            id: createId("school"),
+            nome: payload.nome,
+            endereco: payload.endereco,
+            municipio: payload.municipio,
+            nivelEnsino: payload.nivelEnsino,
+            contatos: payload.contatos,
+            nif: payload.nif || "",
+            codigoEscolar: payload.codigoEscolar,
+            responsavel: payload.responsavel || "Direcao escolar",
+            status: "ativa",
+            createdAt: new Date().toISOString(),
+        };
+
+        state.schools.push(school);
+        writeState(state);
+        trackEvent("school.created", { schoolId: school.id, municipio: school.municipio });
+        return school;
+    }
+
+    function createProvincialAssessment(payload) {
+        const state = readState();
+        const questions = (payload.questions || []).filter((question) => question.text && question.options?.length);
+        const assessment = {
+            id: createId("assessment"),
+            title: payload.title,
+            classe: payload.classe,
+            disciplina: payload.disciplina,
+            topic: payload.topic,
+            scheduledFor: payload.scheduledFor,
+            status: payload.status || "programada",
+            schoolIds: payload.schoolIds?.length ? payload.schoolIds : state.schools.map((school) => school.id),
+            questions,
+            responses: [],
+            createdAt: new Date().toISOString(),
+        };
+
+        state.provincialAssessments.unshift(assessment);
+        writeState(state);
+        trackEvent("provincial-assessment.created", {
+            assessmentId: assessment.id,
+            disciplina: assessment.disciplina,
+            classe: assessment.classe,
+        });
+        return assessment;
+    }
+
+    function calculateAssessmentScore(assessment, answers = {}) {
+        const total = assessment.questions.length;
+        if (!total) return { score: 0, correct: 0, total: 0 };
+        const correct = assessment.questions.filter((question) => Number(answers[question.id]) === question.correctIndex).length;
+        return { score: Math.round((correct / total) * 100), correct, total };
+    }
+
+    function saveAssessmentResponse(assessmentId, studentEmail, answers, options = {}) {
+        const state = readState();
+        const assessment = state.provincialAssessments.find((item) => item.id === assessmentId);
+        if (!assessment) return { ok: false, message: "Avaliacao nao encontrada." };
+
+        const student = getStudentByEmail(studentEmail, state);
+        if (!student) return { ok: false, message: "Aluno nao encontrado." };
+
+        const result = calculateAssessmentScore(assessment, answers);
+        const response = {
+            id: options.id || createId("response"),
+            assessmentId,
+            studentEmail,
+            schoolId: student.schoolId,
+            answers,
+            score: result.score,
+            correct: result.correct,
+            total: result.total,
+            synced: Boolean(options.synced),
+            submittedAt: options.submittedAt || new Date().toISOString(),
+            source: options.source || "local",
+        };
+
+        const index = assessment.responses.findIndex((item) => item.studentEmail === studentEmail);
+        if (index >= 0) assessment.responses[index] = { ...assessment.responses[index], ...response };
+        else assessment.responses.push(response);
+
+        writeState(state);
+        trackEvent("assessment.response.saved", {
+            assessmentId,
+            studentEmail,
+            schoolId: student.schoolId,
+            score: result.score,
+            synced: response.synced,
+        });
+        return { ok: true, response };
+    }
+
+    function getStudentAssessments(studentEmail, state = readState()) {
+        const student = getStudentByEmail(studentEmail, state);
+        if (!student) return [];
+        return state.provincialAssessments
+            .filter((assessment) => assessment.classe === student.classe && assessment.schoolIds.includes(student.schoolId))
+            .map((assessment) => ({
+                ...assessment,
+                response: assessment.responses.find((response) => response.studentEmail === studentEmail) || null,
+            }));
+    }
+
+    function getProvincialDashboard(state = readState()) {
+        const management = getManagementDashboard(state);
+        const schoolPerformance = state.schools.map((school) => {
+            const students = state.students.filter((student) => student.schoolId === school.id);
+            const metrics = students.map((student) => calculateStudentMetrics(student.email, state));
+            const averageProgress = metrics.length ? Math.round(metrics.reduce((sum, item) => sum + item.progresso, 0) / metrics.length) : 0;
+            const assessmentResponses = state.provincialAssessments.flatMap((assessment) =>
+                assessment.responses.filter((response) => response.schoolId === school.id)
+            );
+            const assessmentAverage = assessmentResponses.length
+                ? Math.round(assessmentResponses.reduce((sum, response) => sum + response.score, 0) / assessmentResponses.length)
+                : 0;
+            return {
+                ...school,
+                totalStudents: students.length,
+                totalTeachers: state.teachers.filter((teacher) => teacher.schoolId === school.id).length,
+                averageProgress,
+                assessmentAverage,
+                riskLevel: averageProgress < 50 || (assessmentResponses.length && assessmentAverage < 50) ? "alto" : "controlado",
+            };
+        });
+
+        const coverage = state.curriculum.map((item) => {
+            const matchingLessons = state.teachers.flatMap((teacher) =>
+                teacher.lessons.filter((lesson) =>
+                    teacher.disciplina === item.disciplina &&
+                    lesson.audienceClass === item.classe &&
+                    lesson.title.toLowerCase().includes(item.topico.toLowerCase().split(" ")[0])
+                )
+            );
+            const matchingAssessment = state.provincialAssessments.find((assessment) =>
+                assessment.classe === item.classe &&
+                assessment.disciplina === item.disciplina &&
+                assessment.topic === item.topico
+            );
+            const responses = matchingAssessment?.responses || [];
+            const mastery = responses.length ? Math.round(responses.reduce((sum, response) => sum + response.score, 0) / responses.length) : 0;
+            return {
+                ...item,
+                lessonsLogged: matchingLessons.length,
+                assessmentId: matchingAssessment?.id || null,
+                mastery,
+                status: matchingLessons.length && mastery >= item.masteryTarget ? "em dia" : "atencao",
+            };
+        });
+
+        const alerts = [
+            ...schoolPerformance
+                .filter((school) => school.riskLevel === "alto")
+                .map((school) => ({
+                    type: "school-risk",
+                    title: `${school.nome} abaixo da media`,
+                    message: `Progresso medio ${school.averageProgress}% e media provincial ${school.assessmentAverage}%.`,
+                })),
+            ...coverage
+                .filter((item) => item.status === "atencao")
+                .map((item) => ({
+                    type: "curriculum-delay",
+                    title: `${item.disciplina} - ${item.classe}`,
+                    message: `${item.topico} precisa de verificacao curricular.`,
+                })),
+        ].slice(0, 6);
+
+        return {
+            ...management,
+            province: state.province,
+            schools: schoolPerformance,
+            curriculumCoverage: coverage,
+            provincialAssessments: state.provincialAssessments,
+            alerts,
+        };
+    }
+
     function getTeacherDashboard(teacherEmail, filters = {}, state = readState()) {
         const teacher = getTeacherByEmail(teacherEmail, state);
         if (!teacher) return null;
@@ -827,6 +1115,12 @@ const OkwetuData = (() => {
         trackEvent,
         saveDashboardSnapshot,
         getAIConfig,
+        getSchoolById,
+        addSchool,
+        createProvincialAssessment,
+        saveAssessmentResponse,
+        getStudentAssessments,
+        getProvincialDashboard,
         getTeacherDashboard,
         getManagementDashboard,
     };

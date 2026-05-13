@@ -207,6 +207,45 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+.assessment-card {
+    align-content: start;
+}
+
+.assessment-form {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.assessment-question {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0.85rem;
+    border: 1px solid rgba(24, 82, 164, 0.12);
+    border-radius: 1rem;
+    background: rgba(24, 82, 164, 0.04);
+}
+
+.assessment-question legend {
+    padding: 0 0.3rem;
+    color: #12345d;
+    font-weight: 800;
+}
+
+.choice-row {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    min-height: 36px;
+    color: #4b627e;
+}
+
+.choice-row input {
+    width: 18px;
+    height: 18px;
+    accent-color: #1852a4;
+}
+
 @media (max-width: 900px) {
     .student-info-grid {
         grid-template-columns: 1fr;
