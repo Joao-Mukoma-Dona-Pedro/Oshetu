@@ -26,6 +26,10 @@ service cloud.firestore {
       return role() == 'gestao';
     }
 
+    function schoolAdmin() {
+      return role() == 'escola';
+    }
+
     match /users/{userId} {
       allow create: if signedIn() && request.auth.uid == userId;
       allow read, update: if owner(userId) || management();
@@ -33,15 +37,15 @@ service cloud.firestore {
     }
 
     match /students/{studentId} {
-      allow read: if owner(studentId) || teacherOrManagement();
-      allow create: if owner(studentId) || management();
-      allow update: if owner(studentId) || teacherOrManagement();
+      allow read: if owner(studentId) || teacherOrManagement() || schoolAdmin();
+      allow create: if owner(studentId) || management() || schoolAdmin();
+      allow update: if owner(studentId) || teacherOrManagement() || schoolAdmin();
       allow delete: if management();
     }
 
     match /teachers/{teacherId} {
       allow read: if signedIn();
-      allow create, update: if owner(teacherId) || management();
+      allow create, update: if owner(teacherId) || management() || schoolAdmin();
       allow delete: if management();
     }
 
@@ -82,12 +86,12 @@ service cloud.firestore {
 
     match /assignments/{docId} {
       allow read: if signedIn();
-      allow write: if teacherOrManagement();
+      allow write: if teacherOrManagement() || schoolAdmin();
     }
 
     match /lessons/{docId} {
       allow read: if signedIn();
-      allow write: if teacherOrManagement();
+      allow write: if teacherOrManagement() || schoolAdmin();
     }
 
     match /analytics/{docId} {
@@ -97,7 +101,7 @@ service cloud.firestore {
 
     match /notifications/{docId} {
       allow read: if signedIn();
-      allow write: if teacherOrManagement();
+      allow write: if teacherOrManagement() || schoolAdmin();
     }
 
     match /aiInsights/{docId} {

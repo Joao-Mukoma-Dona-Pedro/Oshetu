@@ -3,95 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Conta - Oshetu</title>
+    <title>Cadastro Bloqueado - OSHETU</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="auth-page">
     <main class="auth-shell">
         <section class="auth-card">
-            <a href="index.html" class="auth-brand">Oshetu</a>
-            <span class="eyebrow">Criacao de conta</span>
-            <h1>Seleciona o perfil certo e entra na estrutura da escola.</h1>
+            <a href="index.html" class="auth-brand">OSHETU</a>
+            <span class="eyebrow">Fluxo protegido</span>
+            <h1>O cadastro publico foi desativado.</h1>
             <p class="auth-copy">
-                Alunos sao encaminhados automaticamente para classes e turmas. Professores e gestao recebem paines proprios.
+                Para manter a hierarquia correta, nenhum utilizador pode escolher publicamente
+                o seu tipo de perfil. O Gabinete Provincial cria escolas; as escolas criam
+                professores; e os professores gerem alunos das suas turmas.
             </p>
-
-            <div id="authMessage" class="status-message" aria-live="polite"></div>
-
-            <form id="formCadastro" class="auth-form">
-                <label class="field" for="cadastroNome">
-                    <span>Nome completo</span>
-                    <input id="cadastroNome" type="text" placeholder="Ex.: Maria Bongo" autocomplete="name" required>
-                </label>
-
-                <label class="field" for="cadastroEmail">
-                    <span>Email</span>
-                    <input id="cadastroEmail" type="email" placeholder="teuemail@escola.com" autocomplete="email" required>
-                </label>
-
-                <label class="field" for="cadastroSenha">
-                    <span>Senha</span>
-                    <div class="input-shell">
-                        <input id="cadastroSenha" type="password" placeholder="Cria uma senha segura" autocomplete="new-password" required>
-                        <button class="toggle-password" type="button" data-target="cadastroSenha">Mostrar</button>
-                    </div>
-                    <div class="password-meter" aria-hidden="true">
-                        <span id="passwordStrengthBar"></span>
-                    </div>
-                    <small id="passwordStrengthText" class="helper-text">Usa pelo menos 6 caracteres.</small>
-                </label>
-
-                <div class="field">
-                    <span>Tipo de utilizador</span>
-                    <div class="role-grid" id="roleGrid">
-                        <button class="role-option" type="button" data-role="aluno" aria-pressed="false">
-                            <strong>Aluno</strong>
-                            <span>Vai para a sua classe e turma conforme o perfil.</span>
-                        </button>
-                        <button class="role-option" type="button" data-role="professor" aria-pressed="false">
-                            <strong>Professor</strong>
-                            <span>Publica aulas, recebe tarefas e acompanha interatividade.</span>
-                        </button>
-                        <button class="role-option" type="button" data-role="gestao" aria-pressed="false">
-                            <strong>Gestao</strong>
-                            <span>Ve o desempenho completo de alunos, professores e turmas.</span>
-                        </button>
-                    </div>
-                    <input id="tipoUsuario" type="hidden" required>
-                </div>
-
-                <label class="field" id="studentProfileField" for="perfilAluno">
-                    <span>Perfil do aluno</span>
-                    <select id="perfilAluno">
-                        <option value="ciencias">Ciencias</option>
-                        <option value="tecnologia">Tecnologia</option>
-                        <option value="humanidades">Humanidades</option>
-                    </select>
-                </label>
-
-                <label class="field" id="teacherDisciplineField" for="disciplinaProfessor" hidden>
-                    <span>Disciplina principal do professor</span>
-                    <input id="disciplinaProfessor" type="text" placeholder="Ex.: Matematica">
-                </label>
-
-                <button type="submit" class="primary-button auth-submit">Criar conta</button>
-            </form>
-
-            <p class="auth-footer-text">Ja tens conta? <a href="login.html">Entrar</a></p>
+            <a href="login.html" class="primary-button auth-submit">Voltar ao acesso do Gabinete</a>
         </section>
     </main>
-
-    <script src="../node_modules/firebase/firebase-app-compat.js"></script>
-    <script src="../node_modules/firebase/firebase-auth-compat.js"></script>
-    <script src="../node_modules/firebase/firebase-firestore-compat.js"></script>
-    <script src="../node_modules/firebase/firebase-storage-compat.js"></script>
-    <script src="../js/config/firebase-config.js"></script>
-    <script src="../js/data/school-data.js"></script>
-    <script src="../js/utils/storage.js"></script>
-    <script src="../js/services/firebase.js"></script>
-    <script src="../js/services/database-service.js"></script>
-    <script src="../js/services/auth-service.js"></script>
-    <script src="../js/services/analytics-service.js"></script>
-    <script src="../js/services/auth-ui.js"></script>
 </body>
 </html>

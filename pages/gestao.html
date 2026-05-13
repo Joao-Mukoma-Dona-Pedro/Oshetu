@@ -3,80 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestao Escolar - Oshetu</title>
+    <title>Gabinete Provincial - OSHETU</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/professor.css">
     <link rel="stylesheet" href="../css/gestao.css">
 </head>
 <body id="gestao-body">
     <header class="dashboard-header management-header">
-            <div>
-                <a href="index.html" class="dashboard-brand">Oshetu</a>
-                <p class="dashboard-subtitle">Painel de gestao</p>
-            </div>
-
-            <div class="topbar-actions">
-                <div id="welcome" class="welcome-chip"></div>
-                <button class="secondary-button" type="button" onclick="logout()">Sair</button>
-            </div>
-        </header>
-
-        <main class="dashboard-shell">
-            <section class="dashboard-panel dashboard-hero-card">
-                <div class="management-alerts">
-        <div class="alert-card danger">
-            <span>⚠</span>
-            <div>
-                <strong>Turma 10B em queda</strong>
-                <p>O desempenho caiu 12% esta semana.</p>
-            </div>
+        <div>
+            <a href="index.html" class="dashboard-brand">OSHETU</a>
+            <p class="dashboard-subtitle">Gabinete Provincial da Educacao</p>
         </div>
-
-        <div class="alert-card warning">
-            <span>📌</span>
-            <div>
-                <strong>17 alunos com faltas elevadas</strong>
-                <p>Necessitam acompanhamento.</p>
-            </div>
+        <div class="topbar-actions">
+            <div id="welcome" class="welcome-chip"></div>
+            <button class="secondary-button" type="button" onclick="logout()">Sair</button>
         </div>
+    </header>
 
-        <div class="alert-card success">
-            <span>📈</span>
-            <div>
-                <strong>Matemática melhorou</strong>
-                <p>A média geral aumentou 8%.</p>
-            </div>
-        </div>
-    </div>
+    <main class="dashboard-shell">
+        <section class="dashboard-panel dashboard-hero-card">
             <div class="profile-hero">
                 <div class="avatar-shell large">
-                    <img id="managementAvatar" alt="Foto de perfil da gestao">
+                    <img id="managementAvatar" alt="Identidade visual do Gabinete">
                 </div>
                 <div class="profile-hero-copy">
-                    <span class="eyebrow">Visao institucional</span>
-                    <h1>A gestao monitora alunos, turmas, professores e desempenho geral.</h1>
-                    <p>Aqui fica a leitura completa do progresso da escola, incluindo medias por turma, classes e perfis.</p>
+                    <span class="eyebrow">Supervisao provincial</span>
+                    <h1>Monitoramento de escolas, curriculo e aprendizagem institucional.</h1>
+                    <p>Este painel nao exibe conversas privadas nem listas individuais de alunos ou professores. A leitura provincial e agregada, pedagogica e orientada a decisao.</p>
                 </div>
             </div>
 
             <div class="metric-grid">
                 <article class="metric-card">
-                    <strong id="totalAlunos">0</strong>
-                    <span>Alunos</span>
+                    <strong id="totalEscolas">0</strong>
+                    <span>Escolas cadastradas</span>
                 </article>
                 <article class="metric-card">
-                    <strong id="totalProfessores">0</strong>
-                    <span>Professores</span>
+                    <strong id="totalMunicipios">0</strong>
+                    <span>Municipios cobertos</span>
                 </article>
                 <article class="metric-card">
-                    <strong id="totalClasses">0</strong>
-                    <span>Classes</span>
+                    <strong id="totalCurriculos">0</strong>
+                    <span>Conteudos curriculares</span>
                 </article>
                 <article class="metric-card">
-                    <strong id="totalTurmas">0</strong>
-                    <span>Turmas</span>
+                    <strong id="totalAvaliacoes">0</strong>
+                    <span>Avaliacoes provinciais</span>
                 </article>
             </div>
+
+            <div class="management-alerts"></div>
         </section>
 
         <section class="dashboard-panel">
@@ -85,9 +61,6 @@
                 <button class="tab-button" type="button" data-tab-target="managementSchoolsTab">Escolas</button>
                 <button class="tab-button" type="button" data-tab-target="managementCurriculumTab">Curriculo</button>
                 <button class="tab-button" type="button" data-tab-target="managementAssessmentsTab">Avaliacoes</button>
-                <button class="tab-button" type="button" data-tab-target="managementStudentsTab">Alunos</button>
-                <button class="tab-button" type="button" data-tab-target="managementTeachersTab">Professores</button>
-                <button class="tab-button" type="button" data-tab-target="managementAnalyticsTab">Graficos</button>
                 <button class="tab-button" type="button" data-tab-target="managementGeminiTab">Gemini</button>
                 <button class="tab-button" type="button" data-tab-target="managementProfileTab">Perfil</button>
             </div>
@@ -97,21 +70,20 @@
                     <div>
                         <div class="section-header-inline">
                             <div>
-                                <span class="eyebrow">Grafico por turma</span>
-                                <h2>Desempenho medio</h2>
+                                <span class="eyebrow">Rede escolar</span>
+                                <h2>Desempenho institucional</h2>
                             </div>
                         </div>
-                        <div id="graficoTurmas" class="progress-card"></div>
+                        <div id="schoolPerformanceChart" class="progress-card"></div>
                     </div>
-
                     <div>
                         <div class="section-header-inline">
                             <div>
-                                <span class="eyebrow">Top 5 alunos</span>
-                                <h2>Maior progresso</h2>
+                                <span class="eyebrow">Curriculo</span>
+                                <h2>Cobertura pedagogica</h2>
                             </div>
                         </div>
-                        <div id="topAlunosGrafico" class="progress-card"></div>
+                        <div id="curriculumOverviewChart" class="progress-card"></div>
                     </div>
                 </div>
             </section>
@@ -126,18 +98,24 @@
                                 <input id="schoolName" type="text" required>
                             </label>
                             <label class="field" for="schoolCode">
-                                <span>Codigo escolar</span>
+                                <span>Codigo institucional</span>
                                 <input id="schoolCode" type="text" required>
                             </label>
                         </div>
                         <div class="lesson-form-grid">
+                            <label class="field" for="schoolLevel">
+                                <span>Tipo de ensino</span>
+                                <select id="schoolLevel" required>
+                                    <option value="Ensino Primario">Ensino Primario</option>
+                                    <option value="Ensino Secundario">Ensino Secundario</option>
+                                    <option value="Ensino Medio">Ensino Medio</option>
+                                    <option value="Ensino Tecnico">Ensino Tecnico</option>
+                                    <option value="Misto">Misto</option>
+                                </select>
+                            </label>
                             <label class="field" for="schoolMunicipio">
                                 <span>Municipio</span>
                                 <input id="schoolMunicipio" type="text" required>
-                            </label>
-                            <label class="field" for="schoolLevel">
-                                <span>Nivel de ensino</span>
-                                <input id="schoolLevel" type="text" required>
                             </label>
                         </div>
                         <label class="field" for="schoolAddress">
@@ -152,6 +130,16 @@
                             <label class="field" for="schoolNif">
                                 <span>NIF</span>
                                 <input id="schoolNif" type="text">
+                            </label>
+                        </div>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="schoolAdminEmail">
+                                <span>Email administrativo da escola</span>
+                                <input id="schoolAdminEmail" type="email" placeholder="direcao@escola.ao">
+                            </label>
+                            <label class="field" for="schoolTemporaryPassword">
+                                <span>Senha temporaria</span>
+                                <input id="schoolTemporaryPassword" type="text" placeholder="Escola@2026">
                             </label>
                         </div>
                         <button type="submit" class="primary-button">Adicionar escola</button>
@@ -169,13 +157,55 @@
             </section>
 
             <section id="managementCurriculumTab" class="tab-panel">
-                <div class="section-header-inline">
+                <div class="split-panel">
+                    <form id="curriculumForm" class="lesson-form">
+                        <h3>Programa curricular</h3>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="curriculumLevel">
+                                <span>Nivel de ensino</span>
+                                <input id="curriculumLevel" type="text" placeholder="Ensino Medio" required>
+                            </label>
+                            <label class="field" for="curriculumClass">
+                                <span>Classe / ano</span>
+                                <input id="curriculumClass" type="text" placeholder="10a Classe" required>
+                            </label>
+                        </div>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="curriculumSubject">
+                                <span>Disciplina</span>
+                                <input id="curriculumSubject" type="text" required>
+                            </label>
+                            <label class="field" for="curriculumPeriod">
+                                <span>Periodo</span>
+                                <input id="curriculumPeriod" type="text" placeholder="1o trimestre - semana 1" required>
+                            </label>
+                        </div>
+                        <label class="field" for="curriculumTopic">
+                            <span>Conteudo previsto</span>
+                            <input id="curriculumTopic" type="text" required>
+                        </label>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="curriculumExpectedBy">
+                                <span>Data limite</span>
+                                <input id="curriculumExpectedBy" type="date" required>
+                            </label>
+                            <label class="field" for="curriculumTarget">
+                                <span>Meta de dominio (%)</span>
+                                <input id="curriculumTarget" type="number" min="1" max="100" value="70" required>
+                            </label>
+                        </div>
+                        <button type="submit" class="primary-button">Adicionar ao curriculo</button>
+                    </form>
                     <div>
-                        <span class="eyebrow">Calendario curricular</span>
-                        <h2>Conteudos previstos versus lecionados</h2>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Calendario curricular</span>
+                                <h2>Conteudos previstos versus lecionados</h2>
+                            </div>
+                        </div>
+                        <div id="curriculumCoverage" class="management-teacher-grid"></div>
                     </div>
                 </div>
-                <div id="curriculumCoverage" class="management-teacher-grid"></div>
             </section>
 
             <section id="managementAssessmentsTab" class="tab-panel">
@@ -206,48 +236,32 @@
                             <span>Topico curricular</span>
                             <input id="assessmentTopic" type="text" required>
                         </label>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="assessmentDuration">
+                                <span>Duracao da prova (min)</span>
+                                <input id="assessmentDuration" type="number" min="5" value="45" required>
+                            </label>
+                            <label class="field" for="assessmentInstructions">
+                                <span>Instrucoes</span>
+                                <input id="assessmentInstructions" type="text" value="Leia cada questao e selecione uma alternativa correta.">
+                            </label>
+                        </div>
                         <label class="field" for="assessmentQuestions">
-                            <span>Perguntas</span>
-                            <textarea id="assessmentQuestions" placeholder="Uma pergunta por linha. Use alternativas separadas por ponto e virgula: pergunta | certa; alternativa; alternativa"></textarea>
+                            <span>Perguntas objetivas</span>
+                            <textarea id="assessmentQuestions" placeholder="Uma pergunta por linha: pergunta | alternativa correta; alternativa B; alternativa C; alternativa D"></textarea>
                         </label>
+                        <button type="button" id="generateAssessmentQuestions" class="secondary-button">Gerar com Gemini</button>
                         <button type="submit" class="primary-button">Programar avaliacao</button>
                     </form>
                     <div>
                         <div class="section-header-inline">
                             <div>
                                 <span class="eyebrow">Monitoramento</span>
-                                <h2>Testes e resultados</h2>
+                                <h2>Testes e resultados institucionais</h2>
                             </div>
                         </div>
                         <div id="assessmentRegistry" class="cards-container"></div>
                     </div>
-                </div>
-            </section>
-
-            <section id="managementStudentsTab" class="tab-panel">
-                <div class="section-header-inline">
-                    <div>
-                        <span class="eyebrow">Acompanhamento total</span>
-                        <h2>Desempenho de todos os alunos</h2>
-                    </div>
-                </div>
-                <div id="listaAlunosGestao" class="interaction-grid management-grid"></div>
-            </section>
-
-            <section id="managementTeachersTab" class="tab-panel">
-                <div class="section-header-inline">
-                    <div>
-                        <span class="eyebrow">Quadro docente</span>
-                        <h2>Professores e atividade</h2>
-                    </div>
-                </div>
-                <div id="listaProfessoresGestao" class="management-teacher-grid"></div>
-            </section>
-
-            <section id="managementAnalyticsTab" class="tab-panel">
-                <div class="analytics-grid">
-                    <div class="progress-card" id="graficoClasses"></div>
-                    <div class="progress-card" id="graficoPerfis"></div>
                 </div>
             </section>
 
@@ -270,8 +284,18 @@
                             <span class="eyebrow">Analise automatica</span>
                             <h3>Relatorio do Gabinete Provincial</h3>
                         </div>
+                        <div class="filter-grid">
+                            <label class="field" for="geminiLevelFilter">
+                                <span>Nivel de ensino</span>
+                                <input id="geminiLevelFilter" type="text" placeholder="Ex.: Ensino Medio">
+                            </label>
+                            <label class="field" for="geminiSubjectFilter">
+                                <span>Disciplina</span>
+                                <input id="geminiSubjectFilter" type="text" placeholder="Ex.: Matematica">
+                            </label>
+                        </div>
                         <div id="geminiInsight"></div>
-                        <button id="generateGeminiReport" class="secondary-button" type="button">Gerar relatorio</button>
+                        <button id="generateGeminiReport" class="secondary-button" type="button">Gerar relatorio filtrado</button>
                     </div>
                 </div>
             </section>
@@ -285,15 +309,14 @@
                         <h3 id="managementProfileName"></h3>
                         <p id="managementProfileRole"></p>
                     </div>
-
                     <form id="managementProfileForm" class="lesson-form">
                         <h3>Atualizar perfil</h3>
                         <label class="field" for="managementName">
-                            <span>Nome da area de gestao</span>
+                            <span>Nome institucional</span>
                             <input id="managementName" type="text">
                         </label>
                         <label class="field" for="managementAvatarInput">
-                            <span>Foto de perfil</span>
+                            <span>Identidade visual</span>
                             <input id="managementAvatarInput" type="file" accept="image/*">
                         </label>
                         <button type="submit" class="primary-button">Guardar perfil</button>

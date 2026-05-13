@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const senha = document.getElementById("loginSenha").value;
 
             if (!emailIsValid(email) || !senha) {
-                showStatus(statusElement, "Preenche email e senha corretamente para entrar.", "error");
+                showStatus(statusElement, "Preenche email institucional e senha corretamente para entrar.", "error");
                 return;
             }
 

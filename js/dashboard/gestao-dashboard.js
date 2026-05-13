@@ -31,9 +31,18 @@ function parseAssessmentQuestions(rawText) {
                 text,
                 options: options.length >= 2 ? options : ["Verdadeiro", "Falso"],
                 correctIndex: 0,
+                skill: "Aplicacao e raciocinio",
             };
         })
         .filter(Boolean);
+}
+
+function formatGeneratedQuestions(result) {
+    if (Array.isArray(result?.questions)) {
+        return result.questions.map((question) => `${question.text} | ${question.options.join("; ")}`).join("\n");
+    }
+    const text = result?.text || "";
+    return text.includes("|") ? text : "";
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -45,26 +54,79 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     setupManagementTabs();
 
+    function renderAlerts(dashboard) {
+        const alertsTarget = document.querySelector(".management-alerts");
+        alertsTarget.innerHTML = dashboard.alerts.length
+            ? dashboard.alerts.map((alert) => `
+                <div class="alert-card ${alert.type === "school-risk" ? "danger" : "warning"}">
+                    <span>!</span>
+                    <div>
+                        <strong>${alert.title}</strong>
+                        <p>${alert.message}</p>
+                    </div>
+                </div>
+            `).join("")
+            : `
+                <div class="alert-card success">
+                    <span>OK</span>
+                    <div>
+                        <strong>Rede provincial sob controlo</strong>
+                        <p>Nenhum alerta critico gerado pelos indicadores institucionais atuais.</p>
+                    </div>
+                </div>
+            `;
+    }
+
     function render() {
         const dashboard = window.OkwetuData.getProvincialDashboard();
         const user = window.OkwetuData.getUserByEmail(usuario.email);
+        const municipalities = new Set(dashboard.schools.map((school) => school.municipio).filter(Boolean));
+
         window.OshetuDatabaseService?.trackAnalytics?.("dashboard.viewed", {
             role: "gestao",
-            totalStudents: dashboard.totalStudents,
-            totalTeachers: dashboard.totalTeachers,
+            totalSchools: dashboard.schools.length,
+            totalCurriculum: dashboard.curriculumCoverage.length,
         });
 
-        document.getElementById("welcome").textContent = `${dashboard.province.name} | ${user.nome}`;
+        document.getElementById("welcome").textContent = dashboard.province.name;
         document.getElementById("managementAvatar").src = user.avatar;
         document.getElementById("managementAvatarProfile").src = user.avatar;
         document.getElementById("managementProfileName").textContent = user.nome;
-        document.getElementById("managementProfileRole").textContent = "Gestao escolar";
+        document.getElementById("managementProfileRole").textContent = "Administrador provincial";
         document.getElementById("managementName").value = user.nome;
 
-        document.getElementById("totalAlunos").textContent = dashboard.totalStudents;
-        document.getElementById("totalProfessores").textContent = dashboard.totalTeachers;
-        document.getElementById("totalClasses").textContent = dashboard.totalClasses;
-        document.getElementById("totalTurmas").textContent = dashboard.totalTurmas;
+        document.getElementById("totalEscolas").textContent = dashboard.schools.length;
+        document.getElementById("totalMunicipios").textContent = municipalities.size;
+        document.getElementById("totalCurriculos").textContent = dashboard.curriculumCoverage.length;
+        document.getElementById("totalAvaliacoes").textContent = dashboard.provincialAssessments.length;
+
+        renderAlerts(dashboard);
+
+        document.getElementById("schoolPerformanceChart").innerHTML = dashboard.schools.length
+            ? dashboard.schools.map((school) => `
+                <div class="progress-row teacher-bar">
+                    <div class="row-title">
+                        <span>${school.nome}</span>
+                        <strong>${school.assessmentAverage || school.averageProgress}%</strong>
+                    </div>
+                    <div class="progress-track"><span style="width:${school.assessmentAverage || school.averageProgress}%"></span></div>
+                    <small>${school.municipio} | ${school.nivelEnsino} | risco ${school.riskLevel}</small>
+                </div>
+            `).join("")
+            : `<div class="empty-state">Nenhuma escola cadastrada pelo Gabinete.</div>`;
+
+        document.getElementById("curriculumOverviewChart").innerHTML = dashboard.curriculumCoverage.length
+            ? dashboard.curriculumCoverage.slice(0, 6).map((item) => `
+                <div class="progress-row teacher-bar">
+                    <div class="row-title">
+                        <span>${item.disciplina} - ${item.topico}</span>
+                        <strong>${item.mastery}%</strong>
+                    </div>
+                    <div class="progress-track"><span style="width:${item.mastery}%"></span></div>
+                    <small>${item.classe} | ${item.periodo} | meta ${item.masteryTarget}% | ${item.status}</small>
+                </div>
+            `).join("")
+            : `<div class="empty-state">Adicione conteudos curriculares para monitoramento.</div>`;
 
         document.getElementById("schoolRegistry").innerHTML = dashboard.schools
             .map((school) => `
@@ -76,10 +138,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <p>${school.endereco}</p>
                     <p class="inline-note">${school.nivelEnsino} | Contactos: ${school.contatos}</p>
                     <div class="resource-summary">
-                        <span class="resource-tag">${school.totalStudents} aluno(s)</span>
-                        <span class="resource-tag">${school.totalTeachers} professor(es)</span>
                         <span class="resource-tag">Progresso ${school.averageProgress}%</span>
                         <span class="resource-tag">Testes ${school.assessmentAverage}%</span>
+                        <span class="resource-tag">Risco ${school.riskLevel}</span>
                     </div>
                 </article>
             `)
@@ -110,14 +171,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <article class="lesson-card enhanced-lesson-card interactive-card">
                         <div class="lesson-card-header">
                             <div>
-                                <span class="eyebrow">${assessment.disciplina} | ${assessment.classe}</span>
+                                <span class="eyebrow">${assessment.scope === "local" ? "Avaliacao local" : "Avaliacao provincial"} | ${assessment.disciplina} | ${assessment.classe}</span>
                                 <h3>${assessment.title}</h3>
                                 <p>${assessment.topic}</p>
                             </div>
                             <span class="lesson-date">${assessment.scheduledFor}</span>
                         </div>
+                        <p class="inline-note">${assessment.instructions}</p>
                         <div class="resource-summary">
                             <span class="resource-tag">${assessment.status}</span>
+                            <span class="resource-tag">${assessment.durationMinutes} min</span>
                             <span class="resource-tag">${assessment.questions.length} pergunta(s)</span>
                             <span class="resource-tag">${assessment.responses.length} resposta(s)</span>
                             <span class="resource-tag">Media ${avg}%</span>
@@ -125,124 +188,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </article>
                 `;
             })
-            .join("");
-
-        const alertsTarget = document.querySelector(".management-alerts");
-        alertsTarget.innerHTML = dashboard.alerts.length
-            ? dashboard.alerts.map((alert) => `
-                <div class="alert-card ${alert.type === "school-risk" ? "danger" : "warning"}">
-                    <span>!</span>
-                    <div>
-                        <strong>${alert.title}</strong>
-                        <p>${alert.message}</p>
-                    </div>
-                </div>
-            `).join("")
-            : `
-                <div class="alert-card success">
-                    <span>OK</span>
-                    <div>
-                        <strong>Rede provincial sob controlo</strong>
-                        <p>Nenhum alerta critico gerado pelos indicadores atuais.</p>
-                    </div>
-                </div>
-            `;
-
-        document.getElementById("graficoTurmas").innerHTML = dashboard.turmaPerformance
-            .map((turma) => `
-                <div class="progress-row teacher-bar">
-                    <div class="row-title">
-                        <span>${turma.label} (${turma.total} alunos)</span>
-                        <strong>${turma.mediaProgresso}%</strong>
-                    </div>
-                    <div class="progress-track"><span style="width:${turma.mediaProgresso}%"></span></div>
-                    <small>Media de notas: ${turma.mediaNotas}/20</small>
-                </div>
-            `)
-            .join("");
-
-        document.getElementById("topAlunosGrafico").innerHTML = dashboard.topStudents
-            .map((student) => `
-                <div class="progress-row teacher-bar">
-                    <div class="row-title user-row">
-                        <div class="teacher-chip">
-                            <img src="${student.avatar}" alt="${student.nome}">
-                            <span>${student.nome}</span>
-                        </div>
-                        <strong>${student.progresso}%</strong>
-                    </div>
-                    <div class="progress-track"><span style="width:${student.progresso}%"></span></div>
-                    <small>${student.classe} | Turma ${student.turma} | Media ${student.media}/20</small>
-                </div>
-            `)
-            .join("");
-
-        document.getElementById("graficoClasses").innerHTML = `
-            <div class="analytics-card-header">
-                <span class="eyebrow">Classes</span>
-                <h3>Progresso medio por classe</h3>
-            </div>
-            ${dashboard.classePerformance.map((classe) => `
-                <div class="progress-row teacher-bar">
-                    <div class="row-title">
-                        <span>${classe.label}</span>
-                        <strong>${classe.mediaProgresso}%</strong>
-                    </div>
-                    <div class="progress-track"><span style="width:${classe.mediaProgresso}%"></span></div>
-                    <small>${classe.total} aluno(s)</small>
-                </div>
-            `).join("")}
-        `;
-
-        document.getElementById("graficoPerfis").innerHTML = `
-            <div class="analytics-card-header">
-                <span class="eyebrow">Perfis</span>
-                <h3>Distribuicao de alunos por perfil</h3>
-            </div>
-            ${dashboard.profileDistribution.map((perfil) => `
-                <div class="progress-row teacher-bar">
-                    <div class="row-title">
-                        <span>${perfil.label}</span>
-                        <strong>${perfil.percent}%</strong>
-                    </div>
-                    <div class="progress-track"><span style="width:${perfil.percent}%"></span></div>
-                    <small>${perfil.total} aluno(s)</small>
-                </div>
-            `).join("")}
-        `;
-
-        document.getElementById("listaAlunosGestao").innerHTML = dashboard.studentPerformance
-            .map((student) => `
-                <article class="interaction-card management-row">
-                    <div class="teacher-chip">
-                        <img src="${student.avatar}" alt="${student.nome}">
-                        <strong>${student.nome}</strong>
-                    </div>
-                    <span>${student.perfil}</span>
-                    <span>${student.classe} | Turma ${student.turma}</span>
-                    <span>${student.aulasAssistidas}/${student.totalAulas} aulas</span>
-                    <span>${student.entregas}/${student.totalTarefas} tarefas</span>
-                    <span>Media ${student.media}/20</span>
-                    <span>${student.progresso}% progresso</span>
-                </article>
-            `)
-            .join("");
-
-        document.getElementById("listaProfessoresGestao").innerHTML = dashboard.teachers
-            .map((teacher) => `
-                <article class="profile-card stat-profile-card interactive-card">
-                    <div class="teacher-chip">
-                        <img src="${teacher.avatar}" alt="${teacher.nome}">
-                        <div>
-                            <span class="eyebrow">${teacher.disciplina}</span>
-                            <h3>${teacher.nome}</h3>
-                        </div>
-                    </div>
-                    <p>${teacher.resumo}</p>
-                    <p class="inline-note">Classes: ${teacher.classes.join(", ")} | Turmas: ${teacher.turmas.join(", ")}</p>
-                    <p class="inline-note">Aulas: ${teacher.lessons.length} | Trabalhos recebidos: ${teacher.assignments.reduce((sum, item) => sum + item.submissions.length, 0)}</p>
-                </article>
-            `)
             .join("");
     }
 
@@ -256,10 +201,40 @@ document.addEventListener("DOMContentLoaded", async () => {
             endereco: document.getElementById("schoolAddress").value.trim(),
             contatos: document.getElementById("schoolContacts").value.trim(),
             nif: document.getElementById("schoolNif").value.trim(),
+            adminEmail: document.getElementById("schoolAdminEmail").value.trim().toLowerCase(),
+            temporaryPassword: document.getElementById("schoolTemporaryPassword").value.trim(),
         });
         window.OshetuDatabaseService?.create?.("schools", school, school.id);
         event.target.reset();
         render();
+    });
+
+    document.getElementById("curriculumForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const item = window.OkwetuData.addCurriculumItem({
+            nivelEnsino: document.getElementById("curriculumLevel").value.trim(),
+            classe: document.getElementById("curriculumClass").value.trim(),
+            disciplina: document.getElementById("curriculumSubject").value.trim(),
+            periodo: document.getElementById("curriculumPeriod").value.trim(),
+            topico: document.getElementById("curriculumTopic").value.trim(),
+            expectedBy: document.getElementById("curriculumExpectedBy").value,
+            masteryTarget: document.getElementById("curriculumTarget").value,
+        });
+        window.OshetuDatabaseService?.create?.("curriculum", item, item.id);
+        event.target.reset();
+        render();
+    });
+
+    document.getElementById("generateAssessmentQuestions").addEventListener("click", async () => {
+        const target = document.getElementById("assessmentQuestions");
+        const curriculumItem = {
+            classe: document.getElementById("assessmentClass").value.trim(),
+            disciplina: document.getElementById("assessmentSubject").value.trim(),
+            topico: document.getElementById("assessmentTopic").value.trim(),
+        };
+        const result = await window.OshetuAIService.generateQuizFromCurriculum(curriculumItem);
+        const generated = formatGeneratedQuestions(result);
+        if (generated) target.value = generated;
     });
 
     document.getElementById("assessmentForm").addEventListener("submit", (event) => {
@@ -271,13 +246,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             classe: document.getElementById("assessmentClass").value.trim(),
             disciplina: document.getElementById("assessmentSubject").value.trim(),
             topic: document.getElementById("assessmentTopic").value.trim(),
+            durationMinutes: document.getElementById("assessmentDuration").value,
+            instructions: document.getElementById("assessmentInstructions").value.trim(),
+            scope: "provincial",
+            createdByRole: "gestao",
             questions,
         });
         window.OshetuDatabaseService?.create?.("provincialAssessments", assessment, assessment.id);
         window.OshetuDatabaseService?.createNotification?.({
             title: "Teste provincial programado",
-            message: `${document.getElementById("assessmentSubject").value} - ${document.getElementById("assessmentTopic").value}`,
-            role: "todos",
+            message: `${assessment.disciplina} - ${assessment.topic}`,
+            role: "escola",
             type: "assessment",
         });
         event.target.reset();
@@ -297,8 +276,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("generateGeminiReport").addEventListener("click", async () => {
         const target = document.getElementById("geminiInsight");
+        const level = document.getElementById("geminiLevelFilter").value.trim().toLowerCase();
+        const subject = document.getElementById("geminiSubjectFilter").value.trim().toLowerCase();
+        const dashboard = window.OkwetuData.getProvincialDashboard();
+        const filtered = {
+            ...dashboard,
+            curriculumCoverage: dashboard.curriculumCoverage.filter((item) =>
+                (!level || String(item.nivelEnsino || "").toLowerCase().includes(level)) &&
+                (!subject || item.disciplina.toLowerCase().includes(subject))
+            ),
+        };
         target.innerHTML = `<p class="inline-note">A gerar analise inteligente...</p>`;
-        const report = await window.OshetuAIService.generateProvincialReport(window.OkwetuData.getProvincialDashboard());
+        const report = await window.OshetuAIService.generateProvincialReport(filtered);
         target.innerHTML = `
             <h4>${report.title || "Relatorio Gemini"}</h4>
             <p>${report.text || report.summary}</p>

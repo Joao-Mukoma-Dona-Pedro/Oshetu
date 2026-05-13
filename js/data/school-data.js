@@ -27,7 +27,7 @@ const OkwetuData = (() => {
             { nome: "Prof. Mateus", email: "mateus@okwetu.com", senha: "1234", tipo: "professor" },
             { nome: "Prof. Elisa", email: "elisa@okwetu.com", senha: "1234", tipo: "professor" },
             { nome: "Prof. Dario", email: "dario@okwetu.com", senha: "1234", tipo: "professor" },
-            { nome: "Gestao Central", email: "gestao@okwetu.com", senha: "1234", tipo: "gestao" },
+            { nome: "Gabinete Provincial da Educacao", email: "gabinete@oshetu.gov.ao", senha: "Oshetu@2026", tipo: "gestao", institutionalName: "Gabinete Provincial da Educacao" },
         ],
         province: {
             id: "gpe-luanda",
@@ -98,6 +98,9 @@ const OkwetuData = (() => {
                 disciplina: "Matematica",
                 topic: "Equacoes do primeiro grau",
                 scheduledFor: "2026-05-15",
+                durationMinutes: 45,
+                instructions: "Leia cada questao com atencao e selecione uma unica alternativa correta.",
+                scope: "provincial",
                 status: "programada",
                 schoolIds: ["esc-central-luanda", "esc-kilamba"],
                 questions: [
@@ -346,6 +349,9 @@ const OkwetuData = (() => {
             assessment.questions = assessment.questions || [];
             assessment.responses = assessment.responses || [];
             assessment.status = assessment.status || "rascunho";
+            assessment.durationMinutes = assessment.durationMinutes || 45;
+            assessment.instructions = assessment.instructions || "Leia cada questao com atencao e selecione uma unica alternativa correta.";
+            assessment.scope = assessment.scope || "provincial";
         });
         return state;
     }
@@ -392,6 +398,7 @@ const OkwetuData = (() => {
     function routeForRole(role) {
         if (role === "aluno") return "aluno.html";
         if (role === "professor") return "professor.html";
+        if (role === "escola") return "escola.html";
         if (role === "gestao") return "gestao.html";
         return "login.html";
     }
@@ -448,6 +455,9 @@ const OkwetuData = (() => {
 
     function registerUser({ nome, email, senha, tipo, perfil, disciplina }) {
         const state = readState();
+        if (tipo === "gestao") {
+            return { ok: false, message: "O perfil do Gabinete Provincial nao pode ser criado por cadastro publico." };
+        }
         if (state.users.some((user) => user.email === email)) {
             return { ok: false, message: "Ja existe uma conta com este email." };
         }
@@ -470,11 +480,21 @@ const OkwetuData = (() => {
         return { ok: true, user: newUser };
     }
 
-    function login(email, senha) {
+    function login(email, senha, options = {}) {
         const state = readState();
         const user = state.users.find((item) => item.email === email && item.senha === senha);
         if (!user) {
             return { ok: false, message: "Email ou senha invalidos. Tenta novamente." };
+        }
+        if (options.requireRole && user.tipo !== options.requireRole && user.role !== options.requireRole) {
+            return { ok: false, message: "Este acesso e reservado ao Gabinete Provincial da Educacao." };
+        }
+        if (options.institution && user.tipo === "gestao") {
+            const institution = String(options.institution).trim().toLowerCase();
+            const expected = String(user.institutionalName || state.province.name).trim().toLowerCase();
+            if (institution !== expected) {
+                return { ok: false, message: "Entidade institucional nao reconhecida para este acesso." };
+            }
         }
 
         localStorage.setItem("usuario", JSON.stringify(user));
@@ -778,14 +798,43 @@ const OkwetuData = (() => {
             nif: payload.nif || "",
             codigoEscolar: payload.codigoEscolar,
             responsavel: payload.responsavel || "Direcao escolar",
+            adminEmail: payload.adminEmail || "",
             status: "ativa",
             createdAt: new Date().toISOString(),
         };
 
         state.schools.push(school);
+        if (school.adminEmail && !state.users.some((user) => user.email === school.adminEmail)) {
+            state.users.push({
+                nome: school.nome,
+                email: school.adminEmail,
+                senha: payload.temporaryPassword || "Escola@2026",
+                tipo: "escola",
+                schoolId: school.id,
+            });
+        }
         writeState(state);
         trackEvent("school.created", { schoolId: school.id, municipio: school.municipio });
         return school;
+    }
+
+    function addCurriculumItem(payload) {
+        const state = readState();
+        const item = {
+            id: createId("curriculum"),
+            nivelEnsino: payload.nivelEnsino,
+            classe: payload.classe,
+            disciplina: payload.disciplina,
+            topico: payload.topico,
+            periodo: payload.periodo,
+            expectedBy: payload.expectedBy,
+            masteryTarget: Number(payload.masteryTarget || 70),
+            createdAt: new Date().toISOString(),
+        };
+        state.curriculum.unshift(item);
+        writeState(state);
+        trackEvent("curriculum.created", { curriculumId: item.id, disciplina: item.disciplina, classe: item.classe });
+        return item;
     }
 
     function createProvincialAssessment(payload) {
@@ -798,6 +847,10 @@ const OkwetuData = (() => {
             disciplina: payload.disciplina,
             topic: payload.topic,
             scheduledFor: payload.scheduledFor,
+            durationMinutes: Number(payload.durationMinutes || 45),
+            instructions: payload.instructions || "Leia cada questao com atencao e selecione uma unica alternativa correta.",
+            scope: payload.scope || "provincial",
+            createdByRole: payload.createdByRole || "gestao",
             status: payload.status || "programada",
             schoolIds: payload.schoolIds?.length ? payload.schoolIds : state.schools.map((school) => school.id),
             questions,
@@ -1117,6 +1170,7 @@ const OkwetuData = (() => {
         getAIConfig,
         getSchoolById,
         addSchool,
+        addCurriculumItem,
         createProvincialAssessment,
         saveAssessmentResponse,
         getStudentAssessments,

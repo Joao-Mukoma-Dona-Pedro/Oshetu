@@ -153,6 +153,18 @@
             }, user.id);
         }
 
+        if (role === "escola") {
+            return create(COLLECTIONS.schools, {
+                userId: user.id,
+                nome: user.nome,
+                adminEmail: user.email,
+                municipio: extra.municipio || "",
+                nivelEnsino: extra.nivelEnsino || "",
+                codigoEscolar: extra.codigoEscolar || "",
+                status: "ativa",
+            }, extra.schoolId || user.id);
+        }
+
         return create(COLLECTIONS.students, {
             userId: user.id,
             nome: user.nome,

@@ -2,13 +2,14 @@
     const ROLE_ROUTES = {
         aluno: "aluno.html",
         professor: "professor.html",
+        escola: "escola.html",
         gestao: "gestao.html",
     };
 
     let sessionReadyPromise = null;
 
     function normalizeRole(role) {
-        return ["aluno", "professor", "gestao"].includes(role) ? role : "aluno";
+        return ["aluno", "professor", "escola", "gestao"].includes(role) ? role : "aluno";
     }
 
     function normalizeEmail(email = "") {
@@ -49,6 +50,10 @@
         const normalizedEmail = normalizeEmail(email);
         const init = window.OshetuFirebase?.initialize?.();
 
+        if (selectedRole === "gestao") {
+            return { ok: false, message: "O perfil do Gabinete Provincial nao pode ser criado por cadastro publico." };
+        }
+
         if (!init?.ok) {
             return window.OkwetuData.registerUser({
                 nome,
@@ -84,12 +89,12 @@
         }
     }
 
-    async function login(email, senha) {
+    async function login(email, senha, options = {}) {
         const normalizedEmail = normalizeEmail(email);
         const init = window.OshetuFirebase?.initialize?.();
 
         if (!init?.ok) {
-            return window.OkwetuData.login(normalizedEmail, senha);
+            return window.OkwetuData.login(normalizedEmail, senha, options);
         }
 
         try {
@@ -97,6 +102,20 @@
             const credential = await auth.signInWithEmailAndPassword(normalizedEmail, senha);
             const profile = await getFirebaseProfile(credential.user.uid);
             const user = publicUser(credential.user, profile || {});
+
+            if (options.requireRole && user.role !== options.requireRole) {
+                await auth.signOut();
+                saveLocalSession(null);
+                return { ok: false, message: "Este acesso e reservado ao Gabinete Provincial da Educacao." };
+            }
+            if (options.institution && user.role === "gestao") {
+                const expected = String(profile?.institutionalName || profile?.nome || "Gabinete Provincial da Educacao").trim().toLowerCase();
+                if (String(options.institution).trim().toLowerCase() !== expected) {
+                    await auth.signOut();
+                    saveLocalSession(null);
+                    return { ok: false, message: "Entidade institucional nao reconhecida para este acesso." };
+                }
+            }
 
             saveLocalSession(user);
             await window.OshetuDatabaseService.hydrateLocalCache();

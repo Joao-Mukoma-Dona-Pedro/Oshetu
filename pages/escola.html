@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Escola - OSHETU</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/professor.css">
+</head>
+<body id="professor-body">
+    <header class="dashboard-header teacher-header">
+        <div>
+            <a href="index.html" class="dashboard-brand">OSHETU</a>
+            <p class="dashboard-subtitle">Administracao escolar subordinada</p>
+        </div>
+        <div class="topbar-actions">
+            <div id="welcome" class="welcome-chip"></div>
+            <button class="secondary-button" type="button" onclick="logout()">Sair</button>
+        </div>
+    </header>
+
+    <main class="dashboard-shell">
+        <section class="dashboard-panel dashboard-hero-card">
+            <div class="profile-hero">
+                <div class="profile-hero-copy">
+                    <span class="eyebrow">Segundo nivel hierarquico</span>
+                    <h1 id="schoolTitle">Painel administrativo da escola.</h1>
+                    <p id="schoolDescription">A escola gere professores, turmas, disciplinas e alunos internamente, respondendo ao Gabinete Provincial.</p>
+                </div>
+            </div>
+            <div class="metric-grid">
+                <article class="metric-card">
+                    <strong id="schoolTeachers">0</strong>
+                    <span>Professores</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="schoolStudents">0</strong>
+                    <span>Alunos</span>
+                </article>
+                <article class="metric-card">
+                    <strong id="schoolAssessments">0</strong>
+                    <span>Avaliacoes provinciais</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="tab-strip" id="schoolTabs">
+                <button class="tab-button is-active" type="button" data-tab-target="schoolProvincialTab">Avaliacoes provinciais</button>
+                <button class="tab-button" type="button" data-tab-target="schoolLocalTab">Avaliacoes internas</button>
+            </div>
+
+            <section id="schoolProvincialTab" class="tab-panel is-active">
+                <div class="section-header-inline">
+                    <div>
+                        <span class="eyebrow">Notificacoes provinciais</span>
+                        <h2>Testes e conteudos enviados pelo Gabinete</h2>
+                    </div>
+                </div>
+                <div id="schoolAssessmentList" class="cards-container"></div>
+            </section>
+
+            <section id="schoolLocalTab" class="tab-panel">
+                <div class="split-panel">
+                    <form id="schoolAssessmentForm" class="lesson-form">
+                        <h3>Criar avaliacao interna</h3>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="schoolAssessmentTitle">
+                                <span>Titulo</span>
+                                <input id="schoolAssessmentTitle" type="text" required>
+                            </label>
+                            <label class="field" for="schoolAssessmentDate">
+                                <span>Data</span>
+                                <input id="schoolAssessmentDate" type="date" required>
+                            </label>
+                        </div>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="schoolAssessmentClass">
+                                <span>Classe</span>
+                                <input id="schoolAssessmentClass" type="text" placeholder="10a Classe" required>
+                            </label>
+                            <label class="field" for="schoolAssessmentSubject">
+                                <span>Disciplina</span>
+                                <input id="schoolAssessmentSubject" type="text" required>
+                            </label>
+                        </div>
+                        <label class="field" for="schoolAssessmentTopic">
+                            <span>Topico</span>
+                            <input id="schoolAssessmentTopic" type="text" required>
+                        </label>
+                        <div class="lesson-form-grid">
+                            <label class="field" for="schoolAssessmentDuration">
+                                <span>Duracao (min)</span>
+                                <input id="schoolAssessmentDuration" type="number" min="5" value="45" required>
+                            </label>
+                            <label class="field" for="schoolAssessmentInstructions">
+                                <span>Instrucoes</span>
+                                <input id="schoolAssessmentInstructions" type="text" value="Leia cada questao e selecione uma alternativa correta.">
+                            </label>
+                        </div>
+                        <label class="field" for="schoolAssessmentQuestions">
+                            <span>Questoes</span>
+                            <textarea id="schoolAssessmentQuestions" placeholder="Pergunta | correta; alternativa B; alternativa C; alternativa D"></textarea>
+                        </label>
+                        <button id="generateSchoolAssessmentQuestions" class="secondary-button" type="button">Gerar com Gemini</button>
+                        <button class="primary-button" type="submit">Publicar avaliacao interna</button>
+                    </form>
+                    <div>
+                        <div class="section-header-inline">
+                            <div>
+                                <span class="eyebrow">Banco interno</span>
+                                <h2>Avaliacoes criadas pela escola</h2>
+                            </div>
+                        </div>
+                        <div id="schoolLocalAssessmentList" class="cards-container"></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="../node_modules/firebase/firebase-app-compat.js"></script>
+    <script src="../node_modules/firebase/firebase-auth-compat.js"></script>
+    <script src="../node_modules/firebase/firebase-firestore-compat.js"></script>
+    <script src="../node_modules/firebase/firebase-storage-compat.js"></script>
+    <script src="../js/config/firebase-config.js"></script>
+    <script src="../js/data/school-data.js"></script>
+    <script src="../js/utils/storage.js"></script>
+    <script src="../js/services/firebase.js"></script>
+    <script src="../js/services/database-service.js"></script>
+    <script src="../js/services/auth-service.js"></script>
+    <script src="../js/services/ai-service.js"></script>
+    <script src="../js/services/auth-ui.js"></script>
+    <script src="../js/dashboard/escola-dashboard.js"></script>
+</body>
+</html>
